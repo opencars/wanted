@@ -1,0 +1,9 @@
+version: "3.3"
+
+services:
+  postgres:
+    image: postgres:12.0
+    volumes:
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
