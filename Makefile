@@ -1,5 +1,5 @@
 .PHONY: default all clean
-APPS     := server
+APPS     := server worker pull
 BLDDIR   := bin
 VERSION  := $(shell cat VERSION)
 

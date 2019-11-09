@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -10,10 +9,11 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 
+	"github.com/opencars/wanted/pkg/api"
 	"github.com/opencars/wanted/pkg/config"
-	"github.com/opencars/wanted/pkg/server"
-	"github.com/opencars/wanted/pkg/server/storage"
-	"github.com/opencars/wanted/pkg/server/storage/postgres"
+	"github.com/opencars/wanted/pkg/handler"
+	"github.com/opencars/wanted/pkg/storage"
+	"github.com/opencars/wanted/pkg/storage/postgres"
 )
 
 func main() {
@@ -26,36 +26,42 @@ func main() {
 	// Get configuration.
 	conf, err := config.New(configPath)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 
 	// Register postgres adapter.
 	db, err := postgres.New(conf.DB.Host, conf.DB.Port, conf.DB.User, conf.DB.Password, conf.DB.Name)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 
 	store := storage.New(db)
-	handler := server.New(store)
+	api := api.New(store)
 
-	router := mux.NewRouter()
+	router := mux.NewRouter().PathPrefix("/wanted/").Subrouter()
 
-	// router.HandleFunc("/version", handler.Version).Methods("GET")
-	// router.HandleFunc("/health", handler.Health).Methods("GET")
+	router.HandleFunc("/swagger.yml", api.Swagger)
+	router.Handle("/version", handler.Handler(api.Version))
 
-	router.HandleFunc("/wanted-transport", handler.ByNumber).Queries("number", "{number}").Methods("GET")
-	router.HandleFunc("/wanted-transport", handler.ByVIN).Queries("vin", "{vin}").Methods("GET")
+	core := router.Methods("GET", "OPTIONS").Subrouter()
+	core.Handle("/vehicles", handler.Handler(api.VehiclesByNumber)).Queries("number", "{number}")
+	core.Handle("/vehicles", handler.Handler(api.VehiclesByVIN)).Queries("vin", "{vin}")
+	core.Handle("/vehicles", handler.Handler(api.Vehicles))
 
-	server := http.Server{
+	core.Handle("/revisions", handler.Handler(api.Revisions))
+	core.Handle("/revisions/{id}", handler.Handler(api.RevisionByID))
+
+	origins := handlers.AllowedOrigins([]string{"*"})
+	methods := handlers.AllowedMethods([]string{"GET", "OPTIONS"})
+
+	cors := handlers.CORS(origins, methods)(router)
+	srv := http.Server{
 		Addr:    ":8080",
-		Handler: handlers.LoggingHandler(os.Stdout, router),
+		Handler: handlers.LoggingHandler(os.Stdout, cors),
 	}
 
-	log.Println("Listening on port 8080")
-	if err := server.ListenAndServe(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+	log.Println("Listening on port 8080...")
+	if err := srv.ListenAndServe(); err != nil {
+		log.Println(err)
 	}
 }

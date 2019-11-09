@@ -1,0 +1,194 @@
+swagger: "2.0"
+info:
+  title: OpenCars Wanted API
+  description: API для перевірки транспортних засобів в Україні
+  version: 0.1.0
+host: api.opencars.pp.ua
+basePath: /wanted/
+schemes:
+  - https
+produces:
+  - application/json
+paths:
+  /vehicles:
+    get:
+      tags:
+        - Публічні дані
+      summary: Інформація про викрадені транспортні засоби
+      parameters:
+        - name: number
+          in: query
+          required: false
+          type: string
+          description: Реєстраційний номер
+        - name: vin
+          in: query
+          required: false
+          type: string
+          description: Ідентифікаційний номер транспортного засобу
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Список транспортний засобів, що підпадають під запит
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Vehicle"
+        400:
+          description: Помилковий запит
+          schema:
+            $ref: "#/definitions/Error"
+  /revisions:
+    get:
+      tags:
+        - Публічні дані
+      summary: Інформація про оновлення даних
+      parameters:
+        - name: limit
+          in: query
+          type: integer
+          required: false
+          default: 100
+          minimum: 1
+          maximum: 100
+          description: Кількість елементів у відповіді
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Список ревізій ресурсу
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Revision"
+        400:
+          description: Помилковий запит
+          schema:
+            $ref: "#/definitions/Error"
+  /revisions/{id}:
+    get:
+      tags:
+        - Публічні дані
+      summary: Відомості про оновлення ресурсу за унікальним кодом
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          description: Унікальний код оновлення даних
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Детальна інформація про оновлення даних
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Revision"
+        400:
+          description: Помилковий запит
+          schema:
+            $ref: "#/definitions/Error"
+        404:
+          description: Не знайдено
+          schema:
+            $ref: "#/definitions/Error"
+definitions:
+  Error:
+    type: object
+    description: Повідомлення про помилку
+    properties:
+      status:
+        type: integer
+        description: Код помилки
+      message:
+        type: string
+        description: Опис помилки
+  Vehicle:
+    type: object
+    description: Інформація про викрадений транспортний засіб
+    properties:
+      id:
+        type: string
+        description: Унікальний номер викраденого транспортного засобу
+        example: "00163195157556102859"
+      brand:
+        type: string
+        description: Інформація про транспортний засіб
+        example: CHEVROLET - EXPRESS
+      color:
+        type: string
+        description: Колір транспортного засобу
+        example: ЗЕЛЕНИЙ
+      number:
+        type: string
+        description: Реєстраційний номер
+        example: AA4686EH
+      body_number:
+        type: string
+        description: Номер кузова
+        example: 1GBSHDC44D1126468
+      chassis_number:
+        type: string
+        description: Номер шасі
+        example: Ідентифікаційний номер транспортного засобу
+      engine_number:
+        type: string
+        description: Номeр двигуна
+        example:
+      ovd:
+        type: string
+        description: Орган, що вніс дані у реєстр
+        example: ГЕНЕРАЛЬНА ПРОКУРАТУРА УКРАЇНИ
+      kind:
+        type: string
+        description: Тип транспортного засобу
+        example: ЛЕГКОВИЙ
+      status:
+        type: string
+        description: Статус розшуку транспортного засобу
+        example: stolen
+      theft_date:
+        type: string
+        description: Час викрадення транспортного засобу у форматі ISO 8601
+        example: "2016-11-14T00:00:00Z"
+      insert_date:
+        type: string
+        description: Час внесення інформації у рееєстр у форматі ISO 8601
+        example: "2016-11-14T14:19:35Z"
+  Revision:
+    type: object
+    description: Інформація про оновлення ресурсу
+    properties:
+      id:
+        type: string
+        description: Унікальний ідентифікаційний код оновлення даних
+        example: "29092018_2"
+      name:
+        type: string
+        description: Назва ресурсу
+        example: "MVSWantedTransport_1.json"
+      url:
+        type: string
+        description: Посилання на оновлений ресурс
+        example: "https://data.gov.ua/dataset/9b0e87e0-eaa3-4f14-9547-03d61b70abb6/resource/06e65b06-3120-4713-8003-7905a83f95f5/revision/29092018_2"
+      file_hash_sum:
+        type: string
+        description: Хеш сума контенту файлу
+        example: "f4ae97fb62c7c9b91d6b950c79deb716"
+      removed:
+        type: number
+        description: Кількість видалених записів з реєстру
+        example: 27019
+      added:
+        type: number
+        description: Кількість даданих записів до реєстру
+        example: 43365
+      created_at:
+        type: string
+        description: Час оновлення даних у форматі ISO 8601
+        example: "2018-09-29T22:33:33Z"
+tags:
+  - name: Публічні дані
+    description: Загальна інформація що надається без авторизації.

@@ -1,8 +1,9 @@
 [database]
-host = "localhost"
+network = "tcp"
+host = "127.0.0.1"
 port = 5432
 username = "postgres"
-password = "postgres"
-database = "postgres"
+password = ""
+database = "wanted"
 max_retries = 0
 pool = 10
