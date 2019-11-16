@@ -9,6 +9,7 @@ import (
 
 	"github.com/gorilla/mux"
 
+	"github.com/opencars/translit"
 	"github.com/opencars/wanted/pkg/handler"
 	"github.com/opencars/wanted/pkg/storage"
 	"github.com/opencars/wanted/pkg/version"
@@ -62,6 +63,7 @@ func (srv *Server) VehiclesByVIN(w http.ResponseWriter, r *http.Request) error {
 
 func (srv *Server) VehiclesByNumber(w http.ResponseWriter, r *http.Request) error {
 	number := mux.Vars(r)["number"]
+	number = translit.ToUA(number)
 
 	w.Header().Set("Content-Type", "application/json")
 

@@ -13,6 +13,7 @@ require (
 	github.com/nats-io/nats-server v1.4.1 // indirect
 	github.com/nats-io/nats-server/v2 v2.1.0 // indirect
 	github.com/nats-io/nats.go v1.8.1
+	github.com/opencars/translit v0.1.1
 	github.com/stretchr/testify v1.4.0
 	golang.org/x/sys v0.0.0-20191010194322-b09406accb47 // indirect
 )

@@ -8,6 +8,7 @@ import (
 	"strings"
 	"unicode"
 
+	"github.com/opencars/translit"
 	"github.com/opencars/wanted/pkg/storage"
 )
 
@@ -117,8 +118,8 @@ func (w *Worker) Fix(vehicles []storage.WantedVehicle) {
 		vehicles[i].Color = strings.ToUpper(strings.TrimSpace(vehicles[i].Color))
 		vehicles[i].Brand = strings.ToUpper(strings.TrimSpace(vehicles[i].Brand))
 
-		// TODO: Transliterate number into cyrillic.
-		// vehicles[i].Number =
+		// Transliterate number into cyrillic.
+		vehicles[i].Number = translit.ToUA(vehicles[i].Number)
 
 		vehicles[i].BodyNumber = strings.TrimSpace(vehicles[i].BodyNumber)
 		vehicles[i].ChassisNumber = strings.TrimSpace(vehicles[i].ChassisNumber)
