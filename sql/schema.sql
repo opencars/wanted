@@ -16,7 +16,7 @@ CREATE TABLE vehicles(
     "revision_id"    VARCHAR(11) NOT NULL REFERENCES revisions(id),
     "id"             TEXT NOT NULL,
     "brand"          TEXT,
-    "color"          TEXT NOT NULL,
+    "color"          TEXT,
     "number"         TEXT,
     "body_number"    TEXT,
     "chassis_number" TEXT,

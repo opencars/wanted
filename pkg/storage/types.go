@@ -19,11 +19,11 @@ type Revision struct {
 type Vehicle struct {
 	ID            string    `db:"id" json:"id"`
 	Brand         string    `db:"brand" json:"brand"`
-	Color         string    `db:"color" json:"color"`
-	Number        string    `db:"number" json:"number"`
-	BodyNumber    string    `db:"body_number" json:"body_number"`
-	ChassisNumber string    `db:"chassis_number" json:"chassis_number"`
-	EngineNumber  string    `db:"engine_number" json:"engine_number"`
+	Color         *string   `db:"color" json:"color"`
+	Number        *string   `db:"number" json:"number"`
+	BodyNumber    *string   `db:"body_number" json:"body_number"`
+	ChassisNumber *string   `db:"chassis_number" json:"chassis_number"`
+	EngineNumber  *string   `db:"engine_number" json:"engine_number"`
 	OVD           string    `db:"ovd" json:"ovd"`
 	Kind          string    `db:"kind" json:"kind"`
 	Status        Status    `db:"status" json:"status"`
