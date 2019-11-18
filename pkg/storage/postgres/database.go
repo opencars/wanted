@@ -169,6 +169,17 @@ func (db *database) VehiclesByVIN(vin string) ([]storage.Vehicle, error) {
 	return vehicles, nil
 }
 
+func (db *database) VehiclesByRevisionID(id string) ([]storage.Vehicle, error) {
+	vehicles := make([]storage.Vehicle, 0)
+
+	err := db.db.Select(&vehicles, `SELECT * FROM vehicles WHERE revision_id = $1`, id)
+	if err != nil {
+		return nil, fmt.Errorf("failed to select: %w", err)
+	}
+
+	return vehicles, nil
+}
+
 func (db *database) RevisionByID(id string) (*storage.Revision, error) {
 	var revision storage.Revision
 

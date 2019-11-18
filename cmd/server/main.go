@@ -46,6 +46,7 @@ func main() {
 	core := router.Methods("GET", "OPTIONS").Subrouter()
 	core.Handle("/vehicles", handler.Handler(api.VehiclesByNumber)).Queries("number", "{number}")
 	core.Handle("/vehicles", handler.Handler(api.VehiclesByVIN)).Queries("vin", "{vin}")
+	core.Handle("/vehicles", handler.Handler(api.VehiclesByRevisionID)).Queries("revision", "{revision}")
 	core.Handle("/vehicles", handler.Handler(api.Vehicles))
 
 	core.Handle("/revisions", handler.Handler(api.Revisions))

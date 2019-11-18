@@ -7,7 +7,7 @@ import (
 )
 
 // TODO: {input: "ГАЗ (Легковий))", other: "ГАЗ", kind: "Легковий"},
-// TODL: {input: "Volkswagen Polo", other: "Volkswagen Polo", kind: ""},
+// TODO: {input: "Volkswagen Polo", other: "Volkswagen Polo", kind: ""},
 func TestParseKind(t *testing.T) {
 	type test struct {
 		input       string

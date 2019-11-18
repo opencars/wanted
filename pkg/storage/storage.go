@@ -7,6 +7,7 @@ type Database interface {
 	AllRevisionIDs() ([]string, error)
 	VehiclesByNumber(number string) ([]Vehicle, error)
 	VehiclesByVIN(vin string) ([]Vehicle, error)
+	VehiclesByRevisionID(id string) ([]Vehicle, error)
 	Vehicles(limit int64) ([]Vehicle, error)
 
 	CreateOrUpdateVehicles(vv []WantedVehicle) error
@@ -68,6 +69,11 @@ func (s *Store) VehiclesByNumber(number string) ([]Vehicle, error) {
 // WantedVehiclesByVIN returns all wanted vehicles by vin.
 func (s *Store) VehiclesByVIN(vin string) ([]Vehicle, error) {
 	return s.db.VehiclesByVIN(vin)
+}
+
+// VehiclesByRevisionID returns all wanted vehicles by id of the revision.
+func (s *Store) VehiclesByRevisionID(id string) ([]Vehicle, error) {
+	return s.db.VehiclesByRevisionID(id)
 }
 
 func (s *Store) RevisionByID(id string) (*Revision, error) {

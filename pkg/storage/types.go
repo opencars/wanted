@@ -32,13 +32,13 @@ type Vehicle struct {
 	InsertDate    time.Time `db:"insert_date" json:"insert_date"`
 }
 
+// Status represent status of the vehicle search.
+// Can be either "stolen" or "removed".
 type Status string
 
-// Status values.
 const (
 	StatusStolen  Status = "stolen"
 	StatusRemoved Status = "removed"
-	//StatusFailed  Status = "failed"
 )
 
 type WantedVehicle struct {
@@ -51,12 +51,18 @@ type WantedVehicle struct {
 	ChassisNumber string `db:"chassis_number" json:"CHASSISNUMBER"`
 	EngineNumber  string `db:"engine_number" json:"ENGINENUMBER"`
 	Kind          string `db:"kind" json:"-"`
-	Status        Status `db:"status" json:"-"`
-	RevisionID    string `db:"revision_id" json:"-"`
 	TheftDate     string `db:"theft_date" json:"THEFT_DATA"`
 	InsertDate    string `db:"insert_date" json:"INSERT_DATE"`
+	Status        Status `db:"status" json:"-"`
+	RevisionID    string `db:"revision_id" json:"-"`
 }
 
+// ParseKind splits lexeme into kind and other lexems.
+//
+// Example:
+// ParseKind("Tesla - Model X (Легковий автотранспорт)")
+//  =>
+// other: "Hyundai - i30", kind: "Легковий автотранспорт"
 func ParseKind(lexeme string) (other string, kind string) {
 	stack := make([]rune, 0)
 

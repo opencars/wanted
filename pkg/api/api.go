@@ -79,6 +79,23 @@ func (srv *Server) VehiclesByNumber(w http.ResponseWriter, r *http.Request) erro
 	return nil
 }
 
+func (srv *Server) VehiclesByRevisionID(w http.ResponseWriter, r *http.Request) error {
+	id := mux.Vars(r)["revision"]
+
+	w.Header().Set("Content-Type", "application/json")
+
+	transport, err := srv.store.VehiclesByRevisionID(id)
+	if err != nil {
+		return handler.NewError(http.StatusNotFound, "Record not found")
+	}
+
+	if err := json.NewEncoder(w).Encode(&transport); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (srv *Server) Vehicles(w http.ResponseWriter, r *http.Request) error {
 	w.Header().Set("Content-Type", "application/json")
 

@@ -28,21 +28,6 @@ func TestTransport_Sort(t *testing.T) {
 	assert.Equal(t, expected, transport)
 }
 
-// func TestTransport_Search(t *testing.T) {
-// 	arr := make([]WantedVehicle, 0, 100000)
-// 	for i := 0; i < 100000; i++ {
-// 		arr = append(arr, WantedVehicle{ID: strconv.Itoa(i)})
-// 	}
-
-// 	res := Transport(arr)
-// 	sort.Sort(res)
-
-// 	for i, x := range res {
-// 		j := res.Search(x.ID)
-// 		assert.Equal(t, i, j)
-// 	}
-// }
-
 func TestTransport_Search(t *testing.T) {
 	rand.Seed(time.Now().Unix())
 
