@@ -40,10 +40,10 @@ func main() {
 
 	router := mux.NewRouter().PathPrefix("/wanted/").Subrouter()
 
-	router.HandleFunc("/swagger.yml", api.Swagger)
-	router.Handle("/version", handler.Handler(api.Version))
-
 	core := router.Methods("GET", "OPTIONS").Subrouter()
+	core.HandleFunc("/swagger.yml", api.Swagger)
+	core.Handle("/version", handler.Handler(api.Version))
+
 	core.Handle("/vehicles", handler.Handler(api.VehiclesByNumber)).Queries("number", "{number}")
 	core.Handle("/vehicles", handler.Handler(api.VehiclesByVIN)).Queries("vin", "{vin}")
 	core.Handle("/vehicles", handler.Handler(api.VehiclesByRevisionID)).Queries("revision", "{revision}")
