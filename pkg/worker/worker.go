@@ -100,6 +100,25 @@ func (w *Worker) Load(store *storage.Store) error {
 	return nil
 }
 
+func TrimNilStr(lexeme *string) *string {
+	if lexeme == nil {
+		return nil
+	}
+
+	str := *lexeme
+	str = strings.TrimSpace(str)
+
+	str = strings.TrimFunc(str, func(r rune) bool {
+		return r == '-' || r == '%' || r == '*' || r == '.'
+	})
+
+	if str == "" {
+		return nil
+	}
+
+	return &str
+}
+
 func (w *Worker) Fix(vehicles []storage.WantedVehicle) {
 	for i := range vehicles {
 		vehicles[i].Brand, vehicles[i].Kind = storage.ParseKind(vehicles[i].Brand)
@@ -115,14 +134,33 @@ func (w *Worker) Fix(vehicles []storage.WantedVehicle) {
 
 		// Removed redundant spaces.
 		vehicles[i].OVD = strings.TrimSpace(vehicles[i].OVD)
-		vehicles[i].Color = strings.ToUpper(strings.TrimSpace(vehicles[i].Color))
 		vehicles[i].Brand = strings.ToUpper(strings.TrimSpace(vehicles[i].Brand))
 
-		// Transliterate number into cyrillic.
-		vehicles[i].Number = translit.ToUA(vehicles[i].Number)
+		// Fix Number if not nil.
+		if vehicles[i].Color != nil {
+			vehicles[i].Color = TrimNilStr(vehicles[i].Color)
+			*vehicles[i].Color = strings.ReplaceAll(strings.ToUpper(*vehicles[i].Color), "НЕВИЗНАЧЕНИЙ", "")
+			*vehicles[i].Color = strings.ReplaceAll(strings.ToUpper(*vehicles[i].Color), "НЕОПРЕДЕЛЕН", "")
 
-		vehicles[i].BodyNumber = strings.TrimSpace(vehicles[i].BodyNumber)
-		vehicles[i].ChassisNumber = strings.TrimSpace(vehicles[i].ChassisNumber)
-		vehicles[i].EngineNumber = strings.TrimSpace(vehicles[i].EngineNumber)
+			if *vehicles[i].Color == "" {
+				vehicles[i].Color = nil
+			}
+		}
+
+		// Transliterate number into cyrillic.
+		vehicles[i].Number = TrimNilStr(vehicles[i].Number)
+
+		// Fix color if number nil.
+		if vehicles[i].Number != nil {
+			*vehicles[i].Number = translit.ToUA(*vehicles[i].Number)
+
+			if *vehicles[i].Number == "" {
+				vehicles[i].Number = nil
+			}
+		}
+
+		vehicles[i].BodyNumber = TrimNilStr(vehicles[i].BodyNumber)
+		vehicles[i].ChassisNumber = TrimNilStr(vehicles[i].ChassisNumber)
+		vehicles[i].EngineNumber = TrimNilStr(vehicles[i].EngineNumber)
 	}
 }

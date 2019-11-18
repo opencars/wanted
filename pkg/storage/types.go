@@ -10,7 +10,7 @@ type Revision struct {
 	ID          string  `db:"id" json:"id"`
 	Name        string  `db:"name" json:"name"`
 	URL         string  `db:"url" json:"url"`
-	FileHashSum *string `db:"file_hash_sum" json:"file_hash_sum,omitempty"`
+	FileHashSum *string `db:"file_hash_sum" json:"file_hash_sum"`
 	Removed     int     `db:"removed" json:"removed"`
 	Added       int     `db:"added" json:"added"`
 	CreatedAt   string  `db:"created_at" json:"created_at"`
@@ -19,11 +19,11 @@ type Revision struct {
 type Vehicle struct {
 	ID            string    `db:"id" json:"id"`
 	Brand         string    `db:"brand" json:"brand"`
-	Color         *string   `db:"color" json:"color"`
-	Number        *string   `db:"number" json:"number"`
-	BodyNumber    *string   `db:"body_number" json:"body_number"`
-	ChassisNumber *string   `db:"chassis_number" json:"chassis_number"`
-	EngineNumber  *string   `db:"engine_number" json:"engine_number"`
+	Color         *string   `db:"color" json:"color,omitempty"`
+	Number        *string   `db:"number" json:"number,omitempty"`
+	BodyNumber    *string   `db:"body_number" json:"body_number,omitempty"`
+	ChassisNumber *string   `db:"chassis_number" json:"chassis_number,omitempty"`
+	EngineNumber  *string   `db:"engine_number" json:"engine_number,omitempty"`
 	OVD           string    `db:"ovd" json:"ovd"`
 	Kind          string    `db:"kind" json:"kind"`
 	Status        Status    `db:"status" json:"status"`
@@ -42,19 +42,19 @@ const (
 )
 
 type WantedVehicle struct {
-	ID            string `db:"id" json:"ID"`
-	OVD           string `db:"ovd" json:"OVD"`
-	Brand         string `db:"brand" json:"BRAND"`
-	Color         string `db:"color" json:"COLOR"`
-	Number        string `db:"number" json:"VEHICLENUMBER"`
-	BodyNumber    string `db:"body_number" json:"BODYNUMBER"`
-	ChassisNumber string `db:"chassis_number" json:"CHASSISNUMBER"`
-	EngineNumber  string `db:"engine_number" json:"ENGINENUMBER"`
-	Kind          string `db:"kind" json:"-"`
-	TheftDate     string `db:"theft_date" json:"THEFT_DATA"`
-	InsertDate    string `db:"insert_date" json:"INSERT_DATE"`
-	Status        Status `db:"status" json:"-"`
-	RevisionID    string `db:"revision_id" json:"-"`
+	ID            string  `db:"id" json:"ID"`
+	OVD           string  `db:"ovd" json:"OVD"`
+	Brand         string  `db:"brand" json:"BRAND"`
+	Color         *string `db:"color" json:"COLOR"`
+	Number        *string `db:"number" json:"VEHICLENUMBER"`
+	BodyNumber    *string `db:"body_number" json:"BODYNUMBER"`
+	ChassisNumber *string `db:"chassis_number" json:"CHASSISNUMBER"`
+	EngineNumber  *string `db:"engine_number" json:"ENGINENUMBER"`
+	Kind          string  `db:"kind" json:"-"`
+	TheftDate     string  `db:"theft_date" json:"THEFT_DATA"`
+	InsertDate    string  `db:"insert_date" json:"INSERT_DATE"`
+	Status        Status  `db:"status" json:"-"`
+	RevisionID    string  `db:"revision_id" json:"-"`
 }
 
 // ParseKind splits lexeme into kind and other lexems.

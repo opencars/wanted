@@ -51,7 +51,7 @@ func (srv *Server) VehiclesByVIN(w http.ResponseWriter, r *http.Request) error {
 	vin := mux.Vars(r)["vin"]
 	transport, err := srv.store.VehiclesByVIN(vin)
 	if err != nil {
-		return handler.NewError(http.StatusNotFound, "Record not found")
+		return err
 	}
 
 	if err := json.NewEncoder(w).Encode(&transport); err != nil {
@@ -69,7 +69,7 @@ func (srv *Server) VehiclesByNumber(w http.ResponseWriter, r *http.Request) erro
 
 	transport, err := srv.store.VehiclesByNumber(number)
 	if err != nil {
-		return handler.NewError(http.StatusNotFound, "Record not found")
+		return err
 	}
 
 	if err := json.NewEncoder(w).Encode(&transport); err != nil {
@@ -86,7 +86,7 @@ func (srv *Server) VehiclesByRevisionID(w http.ResponseWriter, r *http.Request) 
 
 	transport, err := srv.store.VehiclesByRevisionID(id)
 	if err != nil {
-		return handler.NewError(http.StatusNotFound, "Record not found")
+		return err
 	}
 
 	if err := json.NewEncoder(w).Encode(&transport); err != nil {
@@ -101,7 +101,7 @@ func (srv *Server) Vehicles(w http.ResponseWriter, r *http.Request) error {
 
 	transport, err := srv.store.Vehicles(100)
 	if err != nil {
-		return handler.NewError(http.StatusInternalServerError, "Unhealthy")
+		return err
 	}
 
 	if err := json.NewEncoder(w).Encode(&transport); err != nil {
@@ -118,7 +118,7 @@ func (srv *Server) RevisionByID(w http.ResponseWriter, r *http.Request) error {
 
 	transport, err := srv.store.RevisionByID(id)
 	if err != nil {
-		return handler.NewError(http.StatusNotFound, "Record not found")
+		return err
 	}
 
 	if err := json.NewEncoder(w).Encode(&transport); err != nil {
@@ -141,13 +141,12 @@ func (srv *Server) Revisions(w http.ResponseWriter, r *http.Request) error {
 			return handler.NewError(http.StatusBadRequest, "Limit is not valid")
 		}
 
-		// fmt.Println(limit)
 		amount = limit
 	}
 
 	revisions, err := srv.store.Revisions(amount)
 	if err != nil {
-		return handler.NewError(http.StatusInternalServerError, "Unhealthy")
+		return err
 	}
 
 	if err := json.NewEncoder(w).Encode(&revisions); err != nil {
