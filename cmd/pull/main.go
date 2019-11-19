@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/opencars/wanted/pkg/bom"
-	"github.com/opencars/wanted/pkg/govdata"
+	"github.com/opencars/govdata"
 )
 
 func DownloadFile(filepath string, url string) error {

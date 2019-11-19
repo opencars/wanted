@@ -7,7 +7,7 @@ import (
 
 	"github.com/opencars/wanted/pkg/bom"
 	"github.com/opencars/wanted/pkg/config"
-	"github.com/opencars/wanted/pkg/govdata"
+	"github.com/opencars/govdata"
 	"github.com/opencars/wanted/pkg/storage"
 	"github.com/opencars/wanted/pkg/storage/postgres"
 	"github.com/opencars/wanted/pkg/worker"
