@@ -17,6 +17,9 @@ type Database interface {
 	CreateRevision(*Revision) error
 	Revisions(limit int64) ([]Revision, error)
 	RevisionByID(id string) (*Revision, error)
+
+	LastRevision() (*Revision, error)
+	RevisionStats() ([]RevisionStatMonth, error)
 }
 
 type Store struct {
@@ -87,4 +90,12 @@ func (s *Store) Vehicles(limit int64) ([]Vehicle, error) {
 
 func (s *Store) Revisions(limit int64) ([]Revision, error) {
 	return s.db.Revisions(limit)
+}
+
+func (s *Store) LastRevision() (*Revision, error) {
+	return s.db.LastRevision()
+}
+
+func (s *Store) RevisionStats() ([]RevisionStatMonth, error) {
+	return s.db.RevisionStats()
 }

@@ -7,13 +7,19 @@ import (
 )
 
 type Revision struct {
-	ID          string  `db:"id" json:"id"`
-	Name        string  `db:"name" json:"name"`
-	URL         string  `db:"url" json:"url"`
-	FileHashSum *string `db:"file_hash_sum" json:"file_hash_sum"`
-	Removed     int     `db:"removed" json:"removed"`
-	Added       int     `db:"added" json:"added"`
-	CreatedAt   string  `db:"created_at" json:"created_at"`
+	ID          string    `db:"id" json:"id"`
+	URL         string    `db:"url" json:"url"`
+	FileHashSum *string   `db:"file_hash_sum" json:"file_hash_sum"`
+	Removed     int       `db:"removed" json:"removed"`
+	Added       int       `db:"added" json:"added"`
+	CreatedAt   time.Time `db:"created_at" json:"created_at"`
+}
+
+type RevisionStatMonth struct {
+	Month   time.Month `db:"month" json:"month"`
+	Year    int        `db:"year" json:"year"`
+	Added   int        `db:"added" json:"added"`
+	Removed int        `db:"removed" json:"removed"`
 }
 
 type Vehicle struct {

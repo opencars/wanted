@@ -7,7 +7,7 @@ type Error interface {
 	Status() int
 }
 
-// Error represents HTTP error.
+// StatusError represents error with http status code.
 type StatusError struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`

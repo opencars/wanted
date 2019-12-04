@@ -8,6 +8,7 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	_ "github.com/lib/pq"
 
 	"github.com/opencars/wanted/pkg/api"
 	"github.com/opencars/wanted/pkg/config"
@@ -50,6 +51,7 @@ func main() {
 	core.Handle("/vehicles", handler.Handler(api.Vehicles))
 
 	core.Handle("/revisions", handler.Handler(api.Revisions))
+	core.Handle("/revisions/stats", handler.Handler(api.RevisionStats))
 	core.Handle("/revisions/{id}", handler.Handler(api.RevisionByID))
 
 	origins := handlers.AllowedOrigins([]string{"*"})

@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"runtime"
 	"strconv"
@@ -133,7 +132,6 @@ func (srv *Server) Revisions(w http.ResponseWriter, r *http.Request) error {
 
 	w.Header().Set("Content-Type", "application/json")
 
-	fmt.Println(vars.Get("limit"))
 	var amount int64 = 100
 	if vars.Get("limit") != "" {
 		limit, err := strconv.ParseInt(vars.Get("limit"), 10, 64)
@@ -150,6 +148,20 @@ func (srv *Server) Revisions(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	if err := json.NewEncoder(w).Encode(&revisions); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (srv *Server) RevisionStats(w http.ResponseWriter, r *http.Request) error {
+	w.Header().Set("Content-Type", "application/json")
+	stats, err := srv.store.RevisionStats()
+	if err != nil {
+		return err
+	}
+
+	if err := json.NewEncoder(w).Encode(&stats); err != nil {
 		return err
 	}
 

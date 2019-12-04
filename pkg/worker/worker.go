@@ -1,7 +1,9 @@
 package worker
 
 import (
+	"bufio"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"sort"
@@ -10,6 +12,10 @@ import (
 
 	"github.com/opencars/translit"
 	"github.com/opencars/wanted/pkg/storage"
+)
+
+var (
+	ErrEmptyArr = errors.New("revision is empty")
 )
 
 type Worker struct {
@@ -21,6 +27,18 @@ func New() *Worker {
 }
 
 func (w *Worker) Parse(revision string, input io.Reader) ([]storage.WantedVehicle, int, int, error) {
+	buf := bufio.NewReader(input)
+
+	_, err := buf.Peek(32)
+	if err == io.EOF {
+		fmt.Printf("SKIPPED: %s\n", revision)
+		return nil, 0, 0, ErrEmptyArr
+	}
+
+	if err != nil {
+		return nil, 0, 0, err
+	}
+
 	dec := json.NewDecoder(input)
 
 	// Read the array open bracket.
@@ -162,5 +180,8 @@ func (w *Worker) Fix(vehicles []storage.WantedVehicle) {
 		vehicles[i].BodyNumber = TrimNilStr(vehicles[i].BodyNumber)
 		vehicles[i].ChassisNumber = TrimNilStr(vehicles[i].ChassisNumber)
 		vehicles[i].EngineNumber = TrimNilStr(vehicles[i].EngineNumber)
+
+		// Fix theft_date.
+		vehicles[i].TheftDate = vehicles[i].TheftDate[0:10]
 	}
 }

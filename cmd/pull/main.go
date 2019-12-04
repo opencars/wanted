@@ -11,27 +11,29 @@ import (
 	"sync"
 	"time"
 
-	"github.com/opencars/wanted/pkg/bom"
 	"github.com/opencars/govdata"
+	"github.com/opencars/wanted/pkg/bom"
 )
 
+// DownloadFile downloads file from the url to the specified filepath.
 func DownloadFile(filepath string, url string) error {
-	// Get the data
+	// Get the data.
 	resp, err := http.Get(url)
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
 
-	// Create the file
+	// Create the file.
 	out, err := os.Create(filepath)
 	if err != nil {
 		return err
 	}
 	defer out.Close()
 
-	// Write the body to file
+	// Write the body to file.
 	_, err = io.Copy(out, bom.NewReader(resp.Body))
+
 	return err
 }
 
@@ -43,6 +45,7 @@ type downloader struct {
 	wg sync.WaitGroup
 }
 
+// Download all revisions from the gov.data.ua resource.
 func (d *downloader) Download(resource *govdata.Resource) {
 	for i := 0; i < 10; i++ {
 		d.wg.Add(1)
@@ -76,6 +79,7 @@ func (d *downloader) Download(resource *govdata.Resource) {
 	d.wg.Wait()
 }
 
+// ProgressBar shows information about the installatin progress.
 func (d *downloader) ProgressBar(max int) {
 	for {
 		<-time.After(1 * time.Second)
@@ -98,5 +102,6 @@ func main() {
 	go downloader.ProgressBar(len(resource.Revisions))
 
 	downloader.Download(resource)
+
 	log.Println("Amount of revisions:", len(resource.Revisions))
 }

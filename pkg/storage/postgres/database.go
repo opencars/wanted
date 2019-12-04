@@ -4,9 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
 
 	"github.com/opencars/wanted/pkg/storage"
 )
@@ -120,9 +120,8 @@ func (db *database) CreateRevisionAndVehicles(revision *storage.Revision, vehicl
 		return err
 	}
 
-	_, err = tx.Exec(`INSERT INTO revisions (id, name, url, file_hash_sum, removed, added, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT(id) DO NOTHING`,
-		revision.ID, revision.Name, revision.URL,
-		revision.FileHashSum, revision.Removed, revision.Added, revision.CreatedAt,
+	_, err = tx.Exec(`INSERT INTO revisions (id, url, file_hash_sum, removed, added, created_at) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT(id) DO NOTHING`,
+		revision.ID, revision.URL, revision.FileHashSum, revision.Removed, revision.Added, revision.CreatedAt,
 	)
 	if err != nil {
 		return err
@@ -213,4 +212,36 @@ func (db *database) Revisions(limit int64) ([]storage.Revision, error) {
 	}
 
 	return revisions, nil
+}
+
+// LastRevision returns last revision in the database by created_at.
+func (db *database) LastRevision() (*storage.Revision, error) {
+	revisions := make([]storage.Revision, 0)
+
+	err := db.db.Select(&revisions, `SELECT * FROM revisions ORDER BY created_at DESC LIMIT 1`)
+	if err == sql.ErrNoRows || len(revisions) == 0 {
+		return &storage.Revision{CreatedAt: time.Time{}}, nil
+	}
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to select: %w", err)
+	}
+
+	return &revisions[0], nil
+}
+
+func (db *database) RevisionStats() ([]storage.RevisionStatMonth, error) {
+	stats := make([]storage.RevisionStatMonth, 0, 1000)
+
+	query := `SELECT date_part('month', created_at) as month, date_part('year', created_at) as year, sum(removed) as removed, sum(added) as added 
+FROM revisions
+GROUP BY year, month
+ORDER BY year DESC, month DESC
+LIMIT 12`
+
+	if err := db.db.Select(&stats, query); err != nil {
+		return nil, err
+	}
+
+	return stats, nil
 }
