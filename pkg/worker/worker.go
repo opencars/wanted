@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"sort"
 	"strings"
 	"unicode"
@@ -110,7 +111,7 @@ func (w *Worker) Load(store *storage.Store) error {
 		return err
 	}
 
-	fmt.Println(len(vehicles))
+	log.Printf("Loading %d vehicles\n", len(vehicles))
 	tmp := storage.Transport(vehicles)
 	sort.Sort(tmp)
 	w.state = tmp

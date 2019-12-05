@@ -54,6 +54,7 @@ func main() {
 		log.Fatal(err)
 	}
 
+	log.Println("Last revision:", last.ID)
 	revisions := govdata.Subscribe(ResourceID, last.CreatedAt)
 	for revision := range revisions {
 		parts := strings.Split(revision.URL, "/")

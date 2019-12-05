@@ -79,7 +79,7 @@ func (d *downloader) Download(resource *govdata.Resource) {
 	d.wg.Wait()
 }
 
-// ProgressBar shows information about the installatin progress.
+// ProgressBar shows information about the installation progress.
 func (d *downloader) ProgressBar(max int) {
 	for {
 		<-time.After(1 * time.Second)
