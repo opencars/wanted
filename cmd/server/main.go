@@ -56,8 +56,9 @@ func main() {
 
 	origins := handlers.AllowedOrigins([]string{"*"})
 	methods := handlers.AllowedMethods([]string{"GET", "OPTIONS"})
+	headers := handlers.AllowedHeaders([]string{"Api-Key"})
 
-	cors := handlers.CORS(origins, methods)(router)
+	cors := handlers.CORS(origins, methods, headers)(router)
 	srv := http.Server{
 		Addr:    ":8080",
 		Handler: handlers.LoggingHandler(os.Stdout, cors),
