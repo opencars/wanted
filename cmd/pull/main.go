@@ -32,7 +32,12 @@ func DownloadFile(filepath string, url string) error {
 	defer out.Close()
 
 	// Write the body to file.
-	_, err = io.Copy(out, bom.NewReader(resp.Body))
+	utf, err := bom.NewReader(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	_, err = io.Copy(out, utf)
 
 	return err
 }

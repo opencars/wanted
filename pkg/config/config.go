@@ -1,7 +1,6 @@
 package config
 
 import (
-	"log"
 	"strconv"
 
 	"github.com/BurntSushi/toml"
@@ -9,19 +8,22 @@ import (
 
 // Settings is decoded configuration file.
 type Settings struct {
-	DB Database `toml:"database"`
+	DB     Database `toml:"database"`
+	Worker Worker   `toml:"worker"`
 }
 
 // Database contains configuration details for database.
 type Database struct {
-	Network    string `toml:"network"`
-	Host       string `toml:"host"`
-	Port       int    `toml:"port"`
-	User       string `toml:"username"`
-	Password   string `toml:"password"`
-	Name       string `toml:"database"`
-	MaxRetries int    `toml:"max_retries"`
-	Pool       int    `toml:"pool"`
+	Host     string `toml:"host"`
+	Port     int    `toml:"port"`
+	User     string `toml:"username"`
+	Password string `toml:"password"`
+	Name     string `toml:"database"`
+}
+
+// Worker contains settings for data processing by cmd/worker.
+type Worker struct {
+	ResourceID string `toml:"resource_id"`
 }
 
 // Address return API address in "host:port" format.
@@ -31,9 +33,9 @@ func (db *Database) Address() string {
 
 // New reads application configuration from specified file path.
 func New(path string) (*Settings, error) {
-	config := new(Settings)
+	config := &Settings{}
 	if _, err := toml.DecodeFile(path, config); err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	return config, nil

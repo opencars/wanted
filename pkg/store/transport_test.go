@@ -1,4 +1,4 @@
-package storage
+package store
 
 import (
 	"math/rand"
@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/opencars/wanted/pkg/model"
 )
 
 // Works properly.
@@ -31,10 +33,10 @@ func TestTransport_Sort(t *testing.T) {
 func TestTransport_Search(t *testing.T) {
 	rand.Seed(time.Now().Unix())
 
-	arr := Transport(make([]WantedVehicle, 0, 10000))
+	arr := Transport(make([]model.Vehicle, 0, 10000))
 
 	for i := 0; i < 10000; i++ {
-		arr = append(arr, WantedVehicle{ID: strconv.Itoa(rand.Int())})
+		arr = append(arr, model.Vehicle{ID: strconv.Itoa(rand.Int())})
 	}
 
 	sort.Sort(arr)
@@ -51,10 +53,10 @@ func TestTransport_Search(t *testing.T) {
 func BenchmarkTransport_Search(b *testing.B) {
 	rand.Seed(time.Now().Unix())
 
-	arr := Transport(make([]WantedVehicle, 0, b.N))
+	arr := Transport(make([]model.Vehicle, 0, b.N))
 
 	for i := 0; i < b.N; i++ {
-		arr = append(arr, WantedVehicle{ID: strconv.Itoa(rand.Int())})
+		arr = append(arr, model.Vehicle{ID: strconv.Itoa(rand.Int())})
 	}
 
 	sort.Sort(arr)
@@ -69,10 +71,10 @@ func BenchmarkTransport_Search(b *testing.B) {
 func BenchmarkTransport_search(b *testing.B) {
 	rand.Seed(time.Now().Unix())
 
-	arr := Transport(make([]WantedVehicle, 0, b.N))
+	arr := Transport(make([]model.Vehicle, 0, b.N))
 
 	for i := 0; i < b.N; i++ {
-		arr = append(arr, WantedVehicle{ID: strconv.Itoa(rand.Int())})
+		arr = append(arr, model.Vehicle{ID: strconv.Itoa(rand.Int())})
 	}
 
 	sort.Sort(arr)
