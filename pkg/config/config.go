@@ -8,8 +8,9 @@ import (
 
 // Settings is decoded configuration file.
 type Settings struct {
-	DB     Database `toml:"database"`
-	Worker Worker   `toml:"worker"`
+	DB        Database  `toml:"database"`
+	Worker    Worker    `toml:"worker"`
+	Cleansing Cleansing `toml:"cleansing"`
 }
 
 // Database contains configuration details for database.
@@ -24,6 +25,22 @@ type Database struct {
 // Worker contains settings for data processing by cmd/worker.
 type Worker struct {
 	ResourceID string `toml:"resource_id"`
+}
+
+//
+type Cleansing struct {
+	Brand BrandCleansing `toml:"brand"`
+}
+
+//
+type BrandCleansing struct {
+	Matchers []Matcher `toml:"matchers"`
+}
+
+type Matcher struct {
+	Pattern string `toml:"pattern"`
+	Maker   string `toml:"maker"`
+	Model   string `toml:"model"`
 }
 
 // Address return API address in "host:port" format.

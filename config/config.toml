@@ -10,3 +10,10 @@ pool = 10
 
 [worker]
 resource_id = "06e65b06-3120-4713-8003-7905a83f95f5"
+
+[cleansing]
+    [cleansing.brand]
+        [[cleansing.brand.matchers]]
+          pattern = '^([BВ]{1}[АA]{1}[3З]{1})[\s-]*(.*)$'
+          maker = 'ВАЗ'
+          model = '$2'

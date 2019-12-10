@@ -36,19 +36,7 @@ func (api *RevisionAPI) FinByID() handler.Handler {
 // All returns last 100 revision from the store.
 func (api *RevisionAPI) All() handler.Handler {
 	return func(w http.ResponseWriter, r *http.Request) error {
-		//vars := r.URL.Query()
-
 		w.Header().Set("Content-Type", "application/json")
-
-		//var amount int64 = 100
-		//if vars.Get("limit") != "" {
-		//	limit, err := strconv.ParseInt(vars.Get("limit"), 10, 64)
-		//	if err != nil || limit <= 0 || limit > 100 {
-		//		return handler.NewError(http.StatusBadRequest, "Limit is not valid")
-		//	}
-		//
-		//	amount = limit
-		//}
 
 		revisions, err := api.server.store.Revision().All()
 		if err != nil {

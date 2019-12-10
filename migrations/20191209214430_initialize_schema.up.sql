@@ -1,10 +1,10 @@
 CREATE TABLE revisions(
     "id"            VARCHAR(11) NOT NULL,
-    "url"           TEXT NOT NULL,
+    "url"           TEXT        NOT NULL,
     "file_hash_sum" VARCHAR(32),
-    "removed"       INT NOT NULL,
-    "added"         INT NOT NULL,
-    "created_at"    TIMESTAMP NOT NULL DEFAULT NOW()
+    "removed"       INT         NOT NULL,
+    "added"         INT         NOT NULL,
+    "created_at"    TIMESTAMP   NOT NULL DEFAULT NOW()
 );
 
 CREATE UNIQUE INDEX revisions_id_idx ON revisions("id");
@@ -13,7 +13,7 @@ CREATE TYPE VEHICLE_STATUS_T AS ENUM ('stolen', 'removed', 'failed');
 
 CREATE TABLE vehicles(
     "revision_id"    VARCHAR(11) NOT NULL REFERENCES revisions(id),
-    "id"             TEXT NOT NULL,
+    "id"             TEXT             NOT NULL,
     "brand"          TEXT,
     "color"          TEXT,
     "number"         TEXT,
@@ -23,8 +23,8 @@ CREATE TABLE vehicles(
     "ovd"            TEXT             NOT NULL,
     "kind"           TEXT             NOT NULL,
     "status"         VEHICLE_STATUS_T NOT NULL DEFAULT 'stolen',
-    "theft_date"     VARCHAR(10) NOT NULL,
-    "insert_date"    TIMESTAMP NOT NULL
+    "theft_date"     VARCHAR(10)      NOT NULL,
+    "insert_date"    TIMESTAMP        NOT NULL
 );
 
 CREATE UNIQUE INDEX vehicles_id_idx             ON vehicles("id");
