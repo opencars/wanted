@@ -73,7 +73,7 @@ func (w *Worker) Parse(revision string, input io.Reader) ([]model.Vehicle, int, 
 			if err != nil {
 				return nil, 0, 0, err
 			}
-			v.RevisionID = revision
+
 			added++
 			newTransport = append(newTransport, *v)
 			continue
@@ -104,7 +104,6 @@ func (w *Worker) Parse(revision string, input io.Reader) ([]model.Vehicle, int, 
 
 	// Sort newly updated array.
 	sort.Sort(w.state)
-	fmt.Println("Sorted ", sort.IsSorted(w.state))
 
 	return result, added, removed, nil
 }

@@ -3,6 +3,7 @@ package cleansing
 import (
 	"errors"
 	"regexp"
+	"strings"
 
 	"github.com/opencars/wanted/pkg/config"
 )
@@ -29,7 +30,7 @@ func (c *Cleansing) Brand(lexeme string) (string, string, error) {
 		}
 
 		maker := r.ReplaceAllString(lexeme, m.Maker)
-		model := r.ReplaceAllString(lexeme, m.Model)
+		model := strings.TrimSpace(r.ReplaceAllString(lexeme, m.Model))
 
 		return maker, model, nil
 	}

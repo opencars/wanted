@@ -6,6 +6,7 @@ import (
 	"unicode"
 
 	"github.com/opencars/translit"
+	"github.com/opencars/wanted/pkg/cleansing"
 	"github.com/opencars/wanted/pkg/utils"
 )
 
@@ -29,6 +30,8 @@ const (
 type Vehicle struct {
 	ID            string    `db:"id" json:"id"`
 	Brand         string    `db:"brand" json:"brand"`
+	Maker         *string   `db:"maker" json:"maker,omitempty"`
+	Model         *string   `db:"model" json:"model,omitempty"`
 	Color         *string   `db:"color" json:"color,omitempty"`
 	Number        *string   `db:"number" json:"number,omitempty"`
 	BodyNumber    *string   `db:"body_number" json:"body_number,omitempty"`
@@ -40,6 +43,20 @@ type Vehicle struct {
 	RevisionID    string    `db:"revision_id" json:"revision_id"`
 	TheftDate     string    `db:"theft_date" json:"theft_date"`
 	InsertDate    time.Time `db:"insert_date" json:"insert_date"`
+}
+
+func (v *Vehicle) BeforeCreate(c *cleansing.Cleansing) {
+	if v.Brand == "" {
+		return
+	}
+
+	maker, model, err := c.Brand(v.Brand)
+	if err != nil {
+		return
+	}
+
+	v.Maker = &maker
+	v.Model = &model
 }
 
 func fixedColor(color *string) *string {

@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	settings *config.Database
+	settings *config.Settings
 )
 
 func TestRevisionRepository_Create(t *testing.T) {
@@ -119,16 +119,32 @@ func TestRevisionRepository_Stats(t *testing.T) {
 }
 
 func TestMain(m *testing.M) {
-	settings = &config.Database{
-		Host:     os.Getenv("DATABASE_HOST"),
-		Port:     5432,
-		User:     "postgres",
-		Password: os.Getenv("DATABASE_PASSWORD"),
-		Name:     "wanted_test",
+	settings = &config.Settings{
+		DB: config.Database{
+			Host:     os.Getenv("DATABASE_HOST"),
+			Port:     5432,
+			User:     "postgres",
+			Password: os.Getenv("DATABASE_PASSWORD"),
+			Name:     "wanted_test",
+		},
+		Worker: config.Worker{
+			ResourceID: "06e65b06-3120-4713-8003-7905a83f95f5",
+		},
+		Cleansing: config.Cleansing{
+			Brand: config.BrandCleansing{
+				Matchers: []config.Matcher{
+					{
+						Pattern: `^([BВ]{1}[АA]{1}[3З]{1})[\s-]*(.*)$`,
+						Maker:   "ВАЗ",
+						Model:   "$2",
+					},
+				},
+			},
+		},
 	}
 
-	if settings.Host == "" {
-		settings.Host = "127.0.0.1"
+	if settings.DB.Host == "" {
+		settings.DB.Host = "127.0.0.1"
 	}
 
 	os.Exit(m.Run())

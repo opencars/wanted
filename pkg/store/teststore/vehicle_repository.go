@@ -10,15 +10,12 @@ type VehicleRepository struct {
 }
 
 func (r *VehicleRepository) Create(revision *model.Revision, vehicles ...model.Vehicle) error {
+	// TODO: Use v.BeforeCreate()
 	return nil
 }
 
 func (r *VehicleRepository) All() ([]model.Vehicle, error) {
 	return nil, nil
-}
-
-func (r *VehicleRepository) CreateRevisionAndAll(revision *model.Revision, vehicles []model.WantedVehicle) error {
-	return nil
 }
 
 func (r *VehicleRepository) FindByNumber(number string) ([]model.Vehicle, error) {

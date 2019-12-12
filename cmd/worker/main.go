@@ -29,7 +29,7 @@ func main() {
 	}
 
 	// Register postgres adapter.
-	db, err := postgres.New(conf.DB.Host, conf.DB.Port, conf.DB.User, conf.DB.Password, conf.DB.Name)
+	db, err := postgres.New(conf)
 	if err != nil {
 		log.Fatal(err)
 	}

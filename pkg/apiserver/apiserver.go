@@ -9,10 +9,7 @@ import (
 
 // Start starts the server with postgres store.
 func Start(settings *config.Settings) error {
-	store, err := postgres.New(
-		settings.DB.Host, settings.DB.Port, settings.DB.User,
-		settings.DB.Password, settings.DB.Name,
-	)
+	store, err := postgres.New(settings)
 	if err != nil {
 		return err
 	}

@@ -4,9 +4,8 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/opencars/wanted/pkg/store"
-
 	"github.com/opencars/wanted/pkg/model"
+	"github.com/opencars/wanted/pkg/store"
 )
 
 type VehicleRepository struct {
@@ -29,49 +28,27 @@ func (r *VehicleRepository) All() ([]model.Vehicle, error) {
 }
 
 func (r *VehicleRepository) CreateOrUpdateAll(vv []model.Vehicle) error {
-	stmt, err := r.store.db.Prepare(`INSERT INTO vehicles (id, ovd, brand, kind, color, number, body_number, chassis_number, engine_number, status, theft_date, insert_date, revision_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) ON CONFLICT(id) DO UPDATE SET status = $10`)
+	stmt, err := r.store.db.PrepareNamed(`
+		INSERT INTO vehicles (
+			id, ovd, brand, maker, model, kind, color,
+			number, body_number, chassis_number, engine_number,
+			status, theft_date, insert_date, revision_id
+		) VALUES (
+			:id, :ovd, :brand, :maker, :model, :kind, :color,
+			:number, :body_number, :chassis_number, :engine_number,
+			:status, :theft_date, :insert_date, :revision_id
+		)
+		ON CONFLICT(id) DO UPDATE SET status = :status`)
 	if err != nil {
 		return err
 	}
 
 	for _, v := range vv {
-		_, err := stmt.Exec(v.ID, v.OVD, v.Brand, v.Kind, v.Color, v.Number, v.BodyNumber, v.ChassisNumber, v.EngineNumber, v.Status, v.TheftDate, v.InsertDate, v.RevisionID)
+		v.BeforeCreate(r.store.clean)
+		_, err := stmt.Exec(v)
 		if err != nil {
 			return err
 		}
-	}
-
-	return nil
-}
-
-// @deprecated: Use Create(revision *model.Revision, vehicles... *model.Vehicle).
-func (r *VehicleRepository) CreateRevisionAndAll(revision *model.Revision, vehicles []model.Vehicle) error {
-	tx, err := r.store.db.BeginTx(context.Background(), &sql.TxOptions{})
-	if err != nil {
-		return err
-	}
-
-	_, err = tx.Exec(`INSERT INTO revisions (id, url, file_hash_sum, removed, added, created_at) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT(id) DO NOTHING`,
-		revision.ID, revision.URL, revision.FileHashSum, revision.Removed, revision.Added, revision.CreatedAt,
-	)
-	if err != nil {
-		return err
-	}
-
-	stmt, err := tx.Prepare(`INSERT INTO vehicles (id, ovd, brand, kind, color, number, body_number, chassis_number, engine_number, status, theft_date, insert_date, revision_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) ON CONFLICT(id) DO UPDATE SET status = $10`)
-	if err != nil {
-		return err
-	}
-
-	for _, v := range vehicles {
-		_, err := stmt.Exec(v.ID, v.OVD, v.Brand, v.Kind, v.Color, v.Number, v.BodyNumber, v.ChassisNumber, v.EngineNumber, v.Status, v.TheftDate, v.InsertDate, v.RevisionID)
-		if err != nil {
-			return err
-		}
-	}
-
-	if err := tx.Commit(); err != nil {
-		return err
 	}
 
 	return nil
@@ -161,9 +138,10 @@ func (r *VehicleRepository) Create(revision *model.Revision, vehicles ...model.V
 	if err != nil {
 		return err
 	}
-	_, err = tx.NamedExec(`INSERT INTO revisions (id, url, file_hash_sum, removed, added, created_at) 
-								 VALUES (:id, :url, :file_hash_sum, :removed, :added, :created_at) 
-								 ON CONFLICT(id) DO NOTHING`,
+	_, err = tx.NamedExec(`
+		INSERT INTO revisions (id, url, file_hash_sum, removed, added, created_at)
+		VALUES (:id, :url, :file_hash_sum, :removed, :added, :created_at)
+		ON CONFLICT(id) DO NOTHING`,
 		revision,
 	)
 	if err != nil {
@@ -172,23 +150,26 @@ func (r *VehicleRepository) Create(revision *model.Revision, vehicles ...model.V
 	}
 
 	stmt, err := tx.PrepareNamed(`
-		INSERT INTO vehicles (id, ovd, brand, kind, color, number, body_number, 
-							  chassis_number, engine_number, status, theft_date, 
-							  insert_date, revision_id
-							  )
-		VALUES (:id, :ovd, :brand, :kind, :color, :number, 
-				:body_number, :chassis_number, :engine_number, 
-				:status, :theft_date, :insert_date, :revision_id
-			   )
-        ON CONFLICT(id) DO 
+		INSERT INTO vehicles (
+			id, ovd, brand, maker, model, kind, color, number, 
+			body_number, chassis_number, engine_number, status, 
+			theft_date, insert_date, revision_id
+		)
+		VALUES (
+			:id, :ovd, :brand, :maker, :model, :kind, :color, :number,
+			:body_number, :chassis_number, :engine_number, :status, 
+			:theft_date, :insert_date, :revision_id
+		)
+        ON CONFLICT(id) DO
         UPDATE SET status = :status`)
 	if err != nil {
 		_ = tx.Rollback()
 		return err
 	}
 
-	for _, vehicle := range vehicles {
-		if _, err := stmt.Exec(vehicle); err != nil {
+	for _, v := range vehicles {
+		v.BeforeCreate(r.store.clean)
+		if _, err := stmt.Exec(v); err != nil {
 			_ = tx.Rollback()
 			return err
 		}

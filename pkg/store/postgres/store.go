@@ -3,6 +3,9 @@ package postgres
 import (
 	"fmt"
 
+	"github.com/opencars/wanted/pkg/cleansing"
+	"github.com/opencars/wanted/pkg/config"
+
 	"github.com/jmoiron/sqlx"
 
 	"github.com/opencars/wanted/pkg/store"
@@ -10,6 +13,7 @@ import (
 
 type Store struct {
 	db                 *sqlx.DB
+	clean              *cleansing.Cleansing
 	revisionRepository *RevisionRepository
 	vehicleRepository  *VehicleRepository
 }
@@ -38,8 +42,11 @@ func (s *Store) Vehicle() store.VehicleRepository {
 	return s.vehicleRepository
 }
 
-func New(host string, port int, user, password, dbname string) (*Store, error) {
-	info := fmt.Sprintf("host=%s port=%d user=%s password=\"%s\" dbname=%s sslmode=disable", host, port, user, password, dbname)
+func New(conf *config.Settings) (*Store, error) {
+	info := fmt.Sprintf("host=%s port=%d user=%s password=\"%s\" dbname=%s sslmode=disable",
+		conf.DB.Host, conf.DB.Port, conf.DB.User,
+		conf.DB.Password, conf.DB.Name,
+	)
 
 	db, err := sqlx.Connect("postgres", info)
 	if err != nil {
@@ -47,6 +54,7 @@ func New(host string, port int, user, password, dbname string) (*Store, error) {
 	}
 
 	return &Store{
-		db: db,
+		db:    db,
+		clean: cleansing.New(&conf.Cleansing),
 	}, nil
 }
