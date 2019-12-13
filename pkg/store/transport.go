@@ -1,7 +1,9 @@
-package storage
+package store
+
+import "github.com/opencars/wanted/pkg/model"
 
 // Transport is a wrapper for slice of WantedVehicle.
-type Transport []WantedVehicle
+type Transport []model.Vehicle
 
 // Len is the number of elements in the collection.
 func (t Transport) Len() int {
