@@ -13,10 +13,6 @@ resource_id = "06e65b06-3120-4713-8003-7905a83f95f5"
 
 [cleansing]
     [cleansing.brand]
-        # [[cleansing.brand.matchers]]
-        #   pattern = '^([MМ]{2}[ВB][З3])[\s-]*([MМ]И[НH][CС][KК])?(.*)$'
-        #   maker = 'МИНСК'
-        #   model = 'ММВЗ $3'
         [[cleansing.brand.matchers]]
           pattern = '^(S[UY]ZUK[ІI]|[CС][YУ][З3][YУ][KК][ІIИ]{0,1})[\s-]*(.*)$'
           maker = 'SUZUKI'
