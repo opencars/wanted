@@ -4,11 +4,10 @@ import (
 	"bufio"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
-	"log"
-	"sort"
 
+	"github.com/emirpasic/gods/trees/redblacktree"
+	"github.com/opencars/wanted/pkg/logger"
 	"github.com/opencars/wanted/pkg/model"
 	"github.com/opencars/wanted/pkg/store"
 )
@@ -18,40 +17,50 @@ var (
 )
 
 type Worker struct {
-	state store.Transport
+	tree *redblacktree.Tree
+}
+
+type Node struct {
+	Status model.Status
 }
 
 func New() *Worker {
 	return &Worker{
-		state: make(store.Transport, 0),
+		tree: redblacktree.NewWithStringComparator(),
 	}
 }
 
-func (w *Worker) Parse(revision string, input io.Reader) ([]model.Vehicle, int, int, error) {
-	buf := bufio.NewReader(input)
+const (
+	bom0 = 0xef
+	bom1 = 0xbb
+	bom2 = 0xbf
+)
 
-	_, err := buf.Peek(32)
+func (w *Worker) Parse(revision string, input io.Reader) ([]model.Vehicle, []string, error) {
+	buf := bufio.NewReader(input)
+	b, err := buf.Peek(16)
 	if err == io.EOF {
-		fmt.Printf("SKIPPED: %s\n", revision)
-		return nil, 0, 0, ErrEmptyArr
+		return nil, nil, ErrEmptyArr
 	}
 
 	if err != nil {
-		return nil, 0, 0, err
+		return nil, nil, err
 	}
 
-	dec := json.NewDecoder(input)
+	if b[0] == bom0 && b[1] == bom1 && b[2] == bom2 {
+		if _, err := buf.Discard(16); err != nil {
+			return nil, nil, err
+		}
+	}
 
+	dec := json.NewDecoder(buf)
 	// Read the array open bracket.
 	if _, err := dec.Token(); err != nil {
-		return nil, 0, 0, err
+		return nil, nil, err
 	}
-
 	checked := make(map[string]bool)
-	result := make([]model.Vehicle, 0)
+	removedNodes := make([]string, 0)
 	newTransport := make([]model.Vehicle, 0)
-	added := 0
-	removed := 0
 
 	// New vehicles.
 	for dec.More() {
@@ -63,49 +72,39 @@ func (w *Worker) Parse(revision string, input io.Reader) ([]model.Vehicle, int, 
 		}
 
 		if err != nil {
-			return nil, 0, 0, err
+			return nil, nil, err
 		}
 
-		i := w.state.Search(tmp.ID)
-
-		if i == -1 /* New stolen vehicle */ {
+		_, ok := w.tree.Get(tmp.ID)
+		if !ok {
 			v, err := model.VehicleFromGov(revision, &tmp)
 			if err != nil {
-				return nil, 0, 0, err
+				return nil, nil, err
 			}
-
-			added++
 			newTransport = append(newTransport, *v)
 			continue
 		}
 
-		checked[w.state[i].ID] = true
-		if w.state[i].Status != model.StatusStolen {
-			added++
-			w.state[i].Status = model.StatusStolen
-			result = append(result, w.state[i])
-		}
+		checked[tmp.ID] = true
 	}
 
 	// Removed vehicles.
-	for i, v := range w.state {
-		if _, ok := checked[v.ID]; !ok && v.Status == model.StatusStolen {
-			removed++
-			w.state[i].Status = model.StatusRemoved
-			result = append(result, w.state[i])
+	it := w.tree.Iterator()
+	for it.Next() {
+		id, node := it.Key().(string), it.Value().(*Node)
+		if _, ok := checked[id]; !ok && node.Status == model.StatusStolen {
+			node.Status = model.StatusRemoved
+			removedNodes = append(removedNodes, id)
 		}
 	}
 
 	// Append new stolen vehicles to state.
 	for _, v := range newTransport {
-		w.state = append(w.state, v)
-		result = append(result, v)
+		node := &Node{Status: v.Status}
+		w.tree.Put(v.ID, node)
 	}
 
-	// Sort newly updated array.
-	sort.Sort(w.state)
-
-	return result, added, removed, nil
+	return newTransport, removedNodes, nil
 }
 
 func (w *Worker) Load(s store.Store) error {
@@ -114,10 +113,12 @@ func (w *Worker) Load(s store.Store) error {
 		return err
 	}
 
-	log.Printf("Loading %d vehicles\n", len(vehicles))
-	tmp := store.Transport(vehicles)
-	sort.Sort(tmp)
-	w.state = tmp
+	for _, v := range vehicles {
+		node := &Node{Status: v.Status}
+		w.tree.Put(v.ID, node)
+	}
+
+	logger.Info("Loaded %d vehicles", len(vehicles))
 
 	return nil
 }

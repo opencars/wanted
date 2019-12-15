@@ -14,7 +14,7 @@ type RevisionRepository interface {
 }
 
 type VehicleRepository interface {
-	Create(revision *model.Revision, vehicles ...model.Vehicle) error
+	Create(revision *model.Revision, added []model.Vehicle, removed []string) error
 	FindByNumber(number string) ([]model.Vehicle, error)
 	FindByVIN(vin string) ([]model.Vehicle, error)
 	FindByRevisionID(id string) ([]model.Vehicle, error)

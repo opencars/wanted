@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/opencars/wanted/pkg/store"
+	"github.com/stretchr/testify/assert"
 
 	"github.com/opencars/wanted/pkg/model"
+	"github.com/opencars/wanted/pkg/store"
 	"github.com/opencars/wanted/pkg/store/postgres"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestVehicleRepository_Create(t *testing.T) {
@@ -19,7 +19,7 @@ func TestVehicleRepository_Create(t *testing.T) {
 	vehicle := model.TestVehicle(t)
 	vehicle.RevisionID = revision.ID
 
-	assert.NoError(t, s.Vehicle().Create(revision, *vehicle))
+	assert.NoError(t, s.Vehicle().Create(revision, []model.Vehicle{*vehicle}, nil))
 	assert.NotNil(t, vehicle)
 }
 
@@ -35,7 +35,7 @@ func TestVehicleRepository_FindByNumber(t *testing.T) {
 	revision := model.TestRevision(t)
 	vehicle.RevisionID = revision.ID
 
-	assert.NoError(t, s.Vehicle().Create(revision, *vehicle))
+	assert.NoError(t, s.Vehicle().Create(revision, []model.Vehicle{*vehicle}, nil))
 	assert.NotNil(t, vehicle)
 
 	vehicles, err = s.Vehicle().FindByNumber(*vehicle.Number)
@@ -57,7 +57,7 @@ func TestVehicleRepository_FindByVIN(t *testing.T) {
 	revision := model.TestRevision(t)
 	vehicle.RevisionID = revision.ID
 
-	assert.NoError(t, s.Vehicle().Create(revision, *vehicle))
+	assert.NoError(t, s.Vehicle().Create(revision, []model.Vehicle{*vehicle}, nil))
 	assert.NotNil(t, vehicle)
 
 	vehicles, err = s.Vehicle().FindByVIN(*vehicle.BodyNumber)
@@ -78,7 +78,7 @@ func TestVehicleRepository_FindByRevisionID(t *testing.T) {
 	assert.Equal(t, store.ErrRecordNotFound, err)
 	assert.Nil(t, vehicles)
 
-	assert.NoError(t, s.Vehicle().Create(revision, *vehicle))
+	assert.NoError(t, s.Vehicle().Create(revision, []model.Vehicle{*vehicle}, nil))
 	assert.NotNil(t, vehicle)
 
 	vehicles, err = s.Vehicle().FindByRevisionID(vehicle.RevisionID)
@@ -103,7 +103,7 @@ func TestVehicleRepository_AllWithLimit(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Empty(t, vehicles)
 
-	assert.NoError(t, s.Vehicle().Create(revision, *vehicle1, *vehicle2))
+	assert.NoError(t, s.Vehicle().Create(revision, []model.Vehicle{*vehicle1, *vehicle2}, nil))
 
 	vehicles, err = s.Vehicle().AllWithLimit(1)
 	assert.NoError(t, err)
@@ -135,7 +135,7 @@ func TestVehicleRepository_All(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Empty(t, vehicles)
 
-	assert.NoError(t, s.Vehicle().Create(revision, *vehicle1, *vehicle2))
+	assert.NoError(t, s.Vehicle().Create(revision, []model.Vehicle{*vehicle1, *vehicle2}, nil))
 
 	vehicles, err = s.Vehicle().All()
 	assert.NoError(t, err)

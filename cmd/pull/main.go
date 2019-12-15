@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -13,6 +12,7 @@ import (
 
 	"github.com/opencars/govdata"
 	"github.com/opencars/wanted/pkg/bom"
+	"github.com/opencars/wanted/pkg/logger"
 )
 
 // DownloadFile downloads file from the url to the specified filepath.
@@ -64,7 +64,7 @@ func (d *downloader) Download(resource *govdata.Resource) {
 				}
 
 				if err := DownloadFile(rev.Name, rev.URL); err != nil {
-					log.Fatal(err)
+					logger.Fatal(err)
 				}
 
 				d.mp.Lock()
@@ -88,7 +88,7 @@ func (d *downloader) Download(resource *govdata.Resource) {
 func (d *downloader) ProgressBar(max int) {
 	for {
 		<-time.After(1 * time.Second)
-		fmt.Printf("\r%d/%d", d.progress, max)
+		fmt.Printf("\rDownloading: %d/%d", d.progress, max)
 	}
 }
 
@@ -97,7 +97,7 @@ func main() {
 	resourceID := "06e65b06-3120-4713-8003-7905a83f95f5"
 	resource, err := gov.ResourceShow(context.Background(), resourceID)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 
 	downloader := downloader{
@@ -105,8 +105,6 @@ func main() {
 	}
 
 	go downloader.ProgressBar(len(resource.Revisions))
-
 	downloader.Download(resource)
-
-	log.Println("Amount of revisions:", len(resource.Revisions))
+	logger.Info("Amount of revisions: %d", len(resource.Revisions))
 }
