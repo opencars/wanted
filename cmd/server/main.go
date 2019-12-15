@@ -2,12 +2,12 @@ package main
 
 import (
 	"flag"
-	"log"
 
 	_ "github.com/lib/pq"
-	"github.com/opencars/wanted/pkg/apiserver"
 
+	"github.com/opencars/wanted/pkg/apiserver"
 	"github.com/opencars/wanted/pkg/config"
+	"github.com/opencars/wanted/pkg/logger"
 )
 
 func main() {
@@ -20,10 +20,10 @@ func main() {
 	// Get configuration.
 	conf, err := config.New(configPath)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 
 	if err := apiserver.Start(conf); err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 }

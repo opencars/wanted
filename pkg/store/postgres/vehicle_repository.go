@@ -133,7 +133,7 @@ func (r *VehicleRepository) AllWithLimit(limit int64) ([]model.Vehicle, error) {
 	return vehicles, nil
 }
 
-func (r *VehicleRepository) Create(revision *model.Revision, vehicles ...model.Vehicle) error {
+func (r *VehicleRepository) Create(revision *model.Revision, added []model.Vehicle, removed []string) error {
 	tx, err := r.store.db.BeginTxx(context.Background(), &sql.TxOptions{})
 	if err != nil {
 		return err
@@ -167,9 +167,18 @@ func (r *VehicleRepository) Create(revision *model.Revision, vehicles ...model.V
 		return err
 	}
 
-	for _, v := range vehicles {
+	for _, v := range added {
 		v.BeforeCreate(r.store.clean)
 		if _, err := stmt.Exec(v); err != nil {
+			_ = tx.Rollback()
+			return err
+		}
+	}
+
+	query := `UPDATE vehicles SET status = $2 WHERE id = $1`
+	for _, id := range removed {
+		_, err := tx.Exec(query, id, model.StatusRemoved)
+		if err != nil {
 			_ = tx.Rollback()
 			return err
 		}

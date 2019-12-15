@@ -27,16 +27,17 @@ type Worker struct {
 	ResourceID string `toml:"resource_id"`
 }
 
-//
+// Cleansing contains rules and setting for data cleansing.
 type Cleansing struct {
 	Brand BrandCleansing `toml:"brand"`
 }
 
-//
+// BrandCleansing contains rules and setting for vehicle brand cleansing.
 type BrandCleansing struct {
 	Matchers []Matcher `toml:"matchers"`
 }
 
+// BrandCleansing contains patterns for vehicle brand cleansing.
 type Matcher struct {
 	Pattern string `toml:"pattern"`
 	Maker   string `toml:"maker"`
