@@ -22,6 +22,8 @@ func TestDB(t *testing.T, settings *config.Settings) (*Store, func(...string)) {
 			assert.NoError(t, err)
 		}
 
-		store.db.Close()
+		if err := store.db.Close(); err != nil {
+			t.Fatal(err)
+		}
 	}
 }

@@ -29,3 +29,5 @@ COPY ./config ./config
 COPY ./docs ./docs
 
 EXPOSE 8080
+
+CMD ["./server"]

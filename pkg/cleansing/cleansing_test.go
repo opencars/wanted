@@ -78,35 +78,6 @@ func TestCleansing_Brand_2(t *testing.T) {
 	}
 }
 
-// func TestCleansing_Brand_3(t *testing.T) {
-// 	c := New(settings)
-
-// 	var tests = []struct {
-// 		in           string
-// 		maker, model string
-// 	}{
-// 		{"MMBЗMИHCK", "MИHCK", "MMBЗ"},
-// 		{"MMBЗMИHCK311211", "MИHCK", "MMBЗ"},
-// 		{"MMBЗMИHCK3112", "MИHCK", "350634"},
-// 		{"ММВЗ - МИНСК 311211", "MИHCK", "350"},
-// 		{"MMBЗMИHCK31121", "MИHCK", "350"},
-// 		{"MMBЗMИHCK3115", "MИHCK", "350"},
-// 		{"MMBЗMИHCK311212", "MИHCK", ""},
-// 		{"ММВЗ - МИНСК 1", "MИHCK", "250"},
-// 		{"ММВЗ - МИНСК", "MИHCK", "350"},
-// 		{"MMBЗ", "MИHCK", ""},
-// 		{"ММВЗ - МИНСК 311212", "MИHCK", "350 638"},
-// 		{"MMBЗ311211", "MИHCK", "350 638"},
-// 	}
-
-// 	for _, tt := range tests {
-// 		maker, model, err := c.Brand(tt.in)
-// 		assert.NoError(t, err)
-// 		assert.Equal(t, tt.maker, maker)
-// 		assert.Equal(t, tt.model, model)
-// 	}
-// }
-
 func TestCleansing_Brand_3(t *testing.T) {
 	c := New(settings)
 

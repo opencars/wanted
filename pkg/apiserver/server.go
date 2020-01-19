@@ -35,17 +35,17 @@ func newServer(store store.Store) *server {
 func (s *server) configureRouter() {
 	core := s.router.Methods("GET", "OPTIONS").Subrouter()
 
-	core.Handle("/wanted/revisions", s.Revision().All())
-	core.Handle("/wanted/revisions/stats", s.Revision().Stats())
-	core.Handle("/wanted/revisions/{id}", s.Revision().FinByID())
+	core.Handle("/api/v1/wanted/revisions", s.Revision().All())
+	core.Handle("/api/v1/wanted/revisions/stats", s.Revision().Stats())
+	core.Handle("/api/v1/wanted/revisions/{id}", s.Revision().FinByID())
 
-	core.Handle("/wanted/swagger.yml", s.Swagger())
-	core.Handle("/wanted/version", handler.Handler(s.Version))
+	core.Handle("/api/v1/wanted/swagger.yml", s.Swagger())
+	core.Handle("/api/v1/wanted/version", handler.Handler(s.Version))
 
-	core.Handle("/wanted/vehicles", s.Vehicle().FindByNumber()).Queries("number", "{number}")
-	core.Handle("/wanted/vehicles", s.Vehicle().FindByVIN()).Queries("vin", "{vin}")
-	core.Handle("/wanted/vehicles", s.Vehicle().FindByRevisionID()).Queries("revision", "{revision}")
-	core.Handle("/wanted/vehicles", s.Vehicle().All())
+	core.Handle("/api/v1/wanted/vehicles", s.Vehicle().FindByNumber()).Queries("number", "{number}")
+	core.Handle("/api/v1/wanted/vehicles", s.Vehicle().FindByVIN()).Queries("vin", "{vin}")
+	core.Handle("/api/v1/wanted/vehicles", s.Vehicle().FindByRevisionID()).Queries("revision", "{revision}")
+	core.Handle("/api/v1/wanted/vehicles", s.Vehicle().All())
 }
 
 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
