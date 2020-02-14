@@ -5,7 +5,6 @@ import (
 	"database/sql"
 
 	"github.com/opencars/wanted/pkg/model"
-	"github.com/opencars/wanted/pkg/store"
 )
 
 type VehicleRepository struct {
@@ -62,10 +61,6 @@ func (r *VehicleRepository) FindByNumber(number string) ([]model.Vehicle, error)
 		return nil, err
 	}
 
-	if len(vehicles) == 0 {
-		return nil, store.ErrRecordNotFound
-	}
-
 	for i := range vehicles {
 		vehicles[i].InsertDate = vehicles[i].InsertDate.UTC()
 	}
@@ -81,10 +76,6 @@ func (r *VehicleRepository) FindByVIN(vin string) ([]model.Vehicle, error) {
 		return nil, err
 	}
 
-	if len(vehicles) == 0 {
-		return nil, store.ErrRecordNotFound
-	}
-
 	for i := range vehicles {
 		vehicles[i].InsertDate = vehicles[i].InsertDate.UTC()
 	}
@@ -98,10 +89,6 @@ func (r *VehicleRepository) FindByRevisionID(id string) ([]model.Vehicle, error)
 	err := r.store.db.Select(&vehicles, `SELECT * FROM vehicles WHERE revision_id = $1`, id)
 	if err != nil {
 		return nil, err
-	}
-
-	if len(vehicles) == 0 {
-		return nil, store.ErrRecordNotFound
 	}
 
 	for i := range vehicles {
@@ -151,13 +138,13 @@ func (r *VehicleRepository) Create(revision *model.Revision, added []model.Vehic
 
 	stmt, err := tx.PrepareNamed(`
 		INSERT INTO vehicles (
-			id, ovd, brand, maker, model, kind, color, number, 
-			body_number, chassis_number, engine_number, status, 
+			id, ovd, brand, maker, model, kind, color, number,
+			body_number, chassis_number, engine_number, status,
 			theft_date, insert_date, revision_id
 		)
 		VALUES (
 			:id, :ovd, :brand, :maker, :model, :kind, :color, :number,
-			:body_number, :chassis_number, :engine_number, :status, 
+			:body_number, :chassis_number, :engine_number, :status,
 			:theft_date, :insert_date, :revision_id
 		)
         ON CONFLICT(id) DO

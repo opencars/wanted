@@ -7,7 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/opencars/wanted/pkg/model"
-	"github.com/opencars/wanted/pkg/store"
 	"github.com/opencars/wanted/pkg/store/postgres"
 )
 
@@ -29,8 +28,9 @@ func TestVehicleRepository_FindByNumber(t *testing.T) {
 
 	vehicle := model.TestVehicle(t)
 	vehicles, err := s.Vehicle().FindByNumber(*vehicle.Number)
-	assert.Equal(t, store.ErrRecordNotFound, err)
-	assert.Nil(t, vehicles)
+	assert.NoError(t, err)
+	assert.NotNil(t, vehicles)
+	assert.Len(t, vehicles, 0)
 
 	revision := model.TestRevision(t)
 	vehicle.RevisionID = revision.ID
@@ -51,8 +51,9 @@ func TestVehicleRepository_FindByVIN(t *testing.T) {
 
 	vehicle := model.TestVehicle(t)
 	vehicles, err := s.Vehicle().FindByVIN(*vehicle.BodyNumber)
-	assert.Equal(t, store.ErrRecordNotFound, err)
-	assert.Nil(t, vehicles)
+	assert.NoError(t, err)
+	assert.NotNil(t, vehicles)
+	assert.Len(t, vehicles, 0)
 
 	revision := model.TestRevision(t)
 	vehicle.RevisionID = revision.ID
@@ -75,8 +76,9 @@ func TestVehicleRepository_FindByRevisionID(t *testing.T) {
 	vehicle.RevisionID = revision.ID
 
 	vehicles, err := s.Vehicle().FindByRevisionID(vehicle.RevisionID)
-	assert.Equal(t, store.ErrRecordNotFound, err)
-	assert.Nil(t, vehicles)
+	assert.NoError(t, err)
+	assert.NotNil(t, vehicles)
+	assert.Len(t, vehicles, 0)
 
 	assert.NoError(t, s.Vehicle().Create(revision, []model.Vehicle{*vehicle}, nil))
 	assert.NotNil(t, vehicle)
