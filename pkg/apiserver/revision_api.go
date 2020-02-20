@@ -33,12 +33,17 @@ func (api *RevisionAPI) FinByID() handler.Handler {
 	}
 }
 
-// All returns last 100 revision from the store.
+// All returns last N revision from the store.
 func (api *RevisionAPI) All() handler.Handler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		w.Header().Set("Content-Type", "application/json")
 
-		revisions, err := api.server.store.Revision().All()
+		limit, err := api.server.limit(r)
+		if err != nil {
+			return err
+		}
+
+		revisions, err := api.server.store.Revision().AllWithLimit(limit)
 		if err != nil {
 			return err
 		}

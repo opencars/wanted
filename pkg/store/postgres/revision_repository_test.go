@@ -78,6 +78,23 @@ func TestRevisionRepository_All(t *testing.T) {
 	assert.Equal(t, *revision, revisions[0])
 }
 
+func TestRevisionRepository_AllWithLimit(t *testing.T) {
+	s, teardown := postgres.TestDB(t, settings)
+	defer teardown("revisions")
+
+	revisions, err := s.Revision().All()
+	assert.NoError(t, err)
+	assert.Empty(t, revisions)
+
+	revision := model.TestRevision(t)
+	assert.NoError(t, s.Revision().Create(revision))
+
+	revisions, err = s.Revision().AllWithLimit(100)
+	assert.NoError(t, err)
+	assert.NotEmpty(t, revisions)
+	assert.Equal(t, *revision, revisions[0])
+}
+
 func TestRevisionRepository_AllIDs(t *testing.T) {
 	s, teardown := postgres.TestDB(t, settings)
 	defer teardown("revisions")

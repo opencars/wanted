@@ -98,7 +98,7 @@ func (r *VehicleRepository) FindByRevisionID(id string) ([]model.Vehicle, error)
 	return vehicles, nil
 }
 
-func (r *VehicleRepository) AllWithLimit(limit int64) ([]model.Vehicle, error) {
+func (r *VehicleRepository) AllWithLimit(limit uint64) ([]model.Vehicle, error) {
 	vehicles := make([]model.Vehicle, 0)
 
 	err := r.store.db.Select(&vehicles,

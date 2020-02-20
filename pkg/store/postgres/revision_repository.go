@@ -4,9 +4,8 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/opencars/wanted/pkg/store"
-
 	"github.com/opencars/wanted/pkg/model"
+	"github.com/opencars/wanted/pkg/store"
 )
 
 type RevisionRepository struct {
@@ -56,6 +55,19 @@ func (r *RevisionRepository) Last() (*model.Revision, error) {
 func (r *RevisionRepository) All() ([]model.Revision, error) {
 	revisions := make([]model.Revision, 0)
 	if err := r.store.db.Select(&revisions, `SELECT * FROM revisions`); err != nil {
+		return nil, err
+	}
+
+	for i := range revisions {
+		revisions[i].CreatedAt = revisions[i].CreatedAt.UTC()
+	}
+
+	return revisions, nil
+}
+
+func (r *RevisionRepository) AllWithLimit(limit uint64) ([]model.Revision, error) {
+	revisions := make([]model.Revision, 0)
+	if err := r.store.db.Select(&revisions, `SELECT * FROM revisions LIMIT $1`, limit); err != nil {
 		return nil, err
 	}
 

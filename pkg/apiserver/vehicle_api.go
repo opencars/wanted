@@ -75,7 +75,12 @@ func (api *VehicleAPI) All() handler.Handler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		w.Header().Set("Content-Type", "application/json")
 
-		transport, err := api.server.store.Vehicle().AllWithLimit(100)
+		limit, err := api.server.limit(r)
+		if err != nil {
+			return err
+		}
+
+		transport, err := api.server.store.Vehicle().AllWithLimit(limit)
 		if err != nil {
 			return err
 		}

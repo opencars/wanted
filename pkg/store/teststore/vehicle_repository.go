@@ -56,6 +56,6 @@ func (r *VehicleRepository) FindByRevisionID(id string) ([]model.Vehicle, error)
 	return nil, nil
 }
 
-func (r *VehicleRepository) AllWithLimit(limit int64) ([]model.Vehicle, error) {
+func (r *VehicleRepository) AllWithLimit(limit uint64) ([]model.Vehicle, error) {
 	return nil, nil
 }

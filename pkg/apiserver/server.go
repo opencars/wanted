@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"runtime"
+	"strconv"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -101,4 +102,13 @@ func (_ *server) Version(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	return nil
+}
+
+func (server *server) limit(r *http.Request) (uint64, error) {
+	limit, err := strconv.ParseUint(r.URL.Query().Get("limit"), 64, 10)
+	if err != nil {
+		return 100, nil
+	}
+
+	return limit, nil
 }

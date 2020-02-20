@@ -9,6 +9,7 @@ type RevisionRepository interface {
 	FindByID(id string) (*model.Revision, error)
 	Last() (*model.Revision, error)
 	All() ([]model.Revision, error)
+	AllWithLimit(limit uint64) ([]model.Revision, error)
 	AllIDs() ([]string, error)
 	Stats() ([]model.RevisionStatMonth, error)
 }
@@ -19,5 +20,5 @@ type VehicleRepository interface {
 	FindByVIN(vin string) ([]model.Vehicle, error)
 	FindByRevisionID(id string) ([]model.Vehicle, error)
 	All() ([]model.Vehicle, error)
-	AllWithLimit(limit int64) ([]model.Vehicle, error)
+	AllWithLimit(limit uint64) ([]model.Vehicle, error)
 }

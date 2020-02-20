@@ -50,6 +50,16 @@ func (r *RevisionRepository) All() ([]model.Revision, error) {
 	return revisions, nil
 }
 
+func (r *RevisionRepository) AllWithLimit(_ uint64) ([]model.Revision, error) {
+	revisions := make([]model.Revision, 0, len(r.revisions))
+
+	for _, v := range r.revisions {
+		revisions = append(revisions, *v)
+	}
+
+	return revisions, nil
+}
+
 func (r *RevisionRepository) AllIDs() ([]string, error) {
 	revisions := make([]string, 0, len(r.revisions))
 
