@@ -105,7 +105,7 @@ func (_ *server) Version(w http.ResponseWriter, r *http.Request) error {
 }
 
 func (server *server) limit(r *http.Request) (uint64, error) {
-	limit, err := strconv.ParseUint(r.URL.Query().Get("limit"), 64, 10)
+	limit, err := strconv.ParseUint(r.URL.Query().Get("limit"), 10, 64)
 	if err != nil {
 		return 100, nil
 	}
