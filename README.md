@@ -6,7 +6,9 @@
 ## API
 
 ```sh
-$ http localhost:8080/transport?number="АА9359РС"
+http http://127.0.0.1:8080/api/v1/wanted/vehicles?number="СВ7899АК"
 ```
 
 ## License
+
+Project released under the terms of the MIT [license](./LICENSE).
