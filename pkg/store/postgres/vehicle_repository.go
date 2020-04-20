@@ -132,7 +132,8 @@ func (r *VehicleRepository) AllWithLimit(limit uint64) ([]model.Vehicle, error) 
 					  body_number, chassis_number, engine_number,
 					  status, theft_date, insert_date, revision_id
 			FROM vehicles
-			ORDER BY theft_date, id DESC LIMIT $1`,
+			ORDER BY theft_date DESC, id DESC
+			LIMIT $1`,
 		limit,
 	)
 	if err != nil {
