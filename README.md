@@ -3,10 +3,76 @@
 [![CircleCI](https://circleci.com/gh/opencars/wanted.svg?style=svg)](https://circleci.com/gh/opencars/wanted)
 [![Go Report Card](https://goreportcard.com/badge/github.com/opencars/wanted)](https://goreportcard.com/report/github.com/opencars/wanted)
 
-## API
+## Development
+
+Build the binary
 
 ```sh
-http http://127.0.0.1:8080/api/v1/wanted/vehicles?number="СВ7899АК"
+make
+```
+
+Start postgres
+
+```sh
+docker-compose up -Vd postgres
+```
+
+Run sql migrations
+
+```sh
+migrate -source file://migrations -database postgres://postgres:@127.0.0.1/wanted_test\?sslmode=disable up
+```
+
+Run the web server
+
+```sh
+./bin/server
+```
+
+## Test
+
+Start postgres
+
+```sh
+docker-compose up -Vd postgres
+```
+
+Run sql migrations
+
+```sh
+migrate -source file://migrations -database postgres://postgres:@127.0.0.1/wanted_test\?sslmode=disable up
+```
+
+Run tests
+
+```sh
+go test -v ./...
+```
+
+## Usage
+
+For example, get information about this amazing Tesla Model S
+
+```sh
+http http://localhost:8080/api/v1/wanted/vehicles?number=СВ5501ВХ
+```
+
+```json
+[
+    {
+        "body_number": "5YJSA1E28HF176944",
+        "brand": "TESLA - MODEL S",
+        "color": "СІРИЙ",
+        "id": "3019228562749883",
+        "insert_date": "2019-08-16T15:37:54Z",
+        "kind": "ЛЕГКОВИЙ",
+        "number": "СВ5501ВХ",
+        "ovd": "СОЛОМ’ЯНСЬКЕ УПРАВЛІННЯ ПОЛІЦІЇ ГУНП В М. КИЄВІ",
+        "revision_id": "17082019_1",
+        "status": "removed",
+        "theft_date": "2019-08-16"
+    }
+]
 ```
 
 ## License

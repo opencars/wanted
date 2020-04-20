@@ -14,7 +14,12 @@ type VehicleRepository struct {
 func (r *VehicleRepository) All() ([]model.Vehicle, error) {
 	vehicles := make([]model.Vehicle, 0)
 
-	err := r.store.db.Select(&vehicles, `SELECT * FROM vehicles ORDER BY theft_date`)
+	err := r.store.db.Select(&vehicles,
+		`SELECT id, ovd, brand, kind, color, number,
+				body_number, chassis_number, engine_number,
+				status, theft_date, insert_date, revision_id
+		FROM vehicles ORDER BY theft_date`,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +61,14 @@ func (r *VehicleRepository) CreateOrUpdateAll(vv []model.Vehicle) error {
 func (r *VehicleRepository) FindByNumber(number string) ([]model.Vehicle, error) {
 	vehicles := make([]model.Vehicle, 0)
 
-	err := r.store.db.Select(&vehicles, `SELECT * FROM vehicles WHERE number = $1`, number)
+	err := r.store.db.Select(&vehicles,
+		`SELECT id, ovd, brand, kind, color, number,
+				body_number, chassis_number, engine_number,
+				status, theft_date, insert_date, revision_id
+		FROM vehicles
+		WHERE number = $1`,
+		number,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +83,14 @@ func (r *VehicleRepository) FindByNumber(number string) ([]model.Vehicle, error)
 func (r *VehicleRepository) FindByVIN(vin string) ([]model.Vehicle, error) {
 	vehicles := make([]model.Vehicle, 0)
 
-	err := r.store.db.Select(&vehicles, `SELECT * FROM vehicles WHERE body_number = $1 OR chassis_number = $1 OR engine_number = $1`, vin)
+	err := r.store.db.Select(&vehicles,
+		`SELECT id, ovd, brand, kind, color, number,
+				body_number, chassis_number, engine_number,
+				status, theft_date, insert_date, revision_id
+		FROM vehicles
+		WHERE body_number = $1 OR chassis_number = $1 OR engine_number = $1`,
+		vin,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +105,14 @@ func (r *VehicleRepository) FindByVIN(vin string) ([]model.Vehicle, error) {
 func (r *VehicleRepository) FindByRevisionID(id string) ([]model.Vehicle, error) {
 	vehicles := make([]model.Vehicle, 0)
 
-	err := r.store.db.Select(&vehicles, `SELECT * FROM vehicles WHERE revision_id = $1`, id)
+	err := r.store.db.Select(&vehicles,
+		`SELECT id, ovd, brand, kind, color, number,
+				body_number, chassis_number, engine_number,
+				status, theft_date, insert_date, revision_id
+		FROM vehicles
+		WHERE revision_id = $1`,
+		id,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -106,7 +132,7 @@ func (r *VehicleRepository) AllWithLimit(limit uint64) ([]model.Vehicle, error) 
 					  body_number, chassis_number, engine_number,
 					  status, theft_date, insert_date, revision_id
 			FROM vehicles
-			ORDER BY theft_date DESC LIMIT $1`,
+			ORDER BY theft_date, id DESC LIMIT $1`,
 		limit,
 	)
 	if err != nil {

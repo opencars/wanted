@@ -111,14 +111,14 @@ func TestVehicleRepository_AllWithLimit(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEmpty(t, vehicles)
 	assert.Equal(t, 1, len(vehicles))
-	assert.Equal(t, *vehicle1, vehicles[0])
+	assert.Equal(t, *vehicle2, vehicles[0])
 
 	vehicles, err = s.Vehicle().AllWithLimit(5)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, vehicles)
 	assert.Equal(t, 2, len(vehicles))
-	assert.Equal(t, *vehicle1, vehicles[0])
-	assert.Equal(t, *vehicle2, vehicles[1])
+	assert.Equal(t, *vehicle2, vehicles[0])
+	assert.Equal(t, *vehicle1, vehicles[1])
 }
 
 func TestVehicleRepository_All(t *testing.T) {
