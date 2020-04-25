@@ -55,7 +55,8 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	headers := handlers.AllowedHeaders([]string{"Api-Key"})
 
 	cors := handlers.CORS(origins, methods, headers)(s.router)
-	cors.ServeHTTP(w, r)
+	compress := handlers.CompressHandler(cors)
+	compress.ServeHTTP(w, r)
 }
 
 func (s *server) Revision() *RevisionAPI {
