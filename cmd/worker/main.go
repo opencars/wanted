@@ -61,35 +61,51 @@ func main() {
 
 		body, err := govdata.ResourceRevision(resource.PackageID, conf.Worker.ResourceID, record.ID)
 		if err != nil {
-			logger.Fatal(err)
+			logger.WithFields(logger.Fields{
+				"revision": record.ID,
+			}).Fatal(err)
 		}
 
 		reader, err := bom.NewReader(body)
 		if err != nil {
-			logger.Fatal(err)
+			logger.WithFields(logger.Fields{
+				"revision": revision,
+				"err":      err,
+			}).Error("Broken bom encoding. Skipped")
+			continue
 		}
 
 		added, removed, err := w.Parse(record.ID, reader)
 		if err == worker.ErrEmptyArr {
 			logger.WithFields(logger.Fields{
 				"revision": revision,
-			}).Warn("Revision is empty. Skipped")
+			}).Error("Revision is empty. Skipped")
 			continue
 		}
 
 		if err != nil {
-			logger.Fatal(err)
+			logger.WithFields(logger.Fields{
+				"revision": revision,
+				"err":      err,
+			}).Error("Revision is broken. Skipped")
+			continue
 		}
 
 		if err := body.Close(); err != nil {
-			logger.Fatal(err)
+			logger.WithFields(logger.Fields{
+				"revision": revision,
+				"err":      err,
+			}).Error("Failed to close body. Skipped")
+			continue
 		}
 
 		record.Added = len(added)
 		record.Removed = len(removed)
 		// Save vehicles and revision.
 		if err := db.Vehicle().Create(record, added, removed); err != nil {
-			logger.Fatal(err)
+			logger.WithFields(logger.Fields{
+				"revision": revision,
+			}).Fatal(err)
 		}
 
 		logger.WithFields(logger.Fields{
