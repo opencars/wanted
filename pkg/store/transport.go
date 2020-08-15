@@ -1,6 +1,8 @@
 package store
 
-import "github.com/opencars/wanted/pkg/model"
+import (
+	"github.com/opencars/wanted/pkg/model"
+)
 
 // Transport is a wrapper for slice of WantedVehicle.
 type Transport []model.Vehicle
@@ -13,7 +15,7 @@ func (t Transport) Len() int {
 // Less reports whether the element with
 // index i should sort before the element with index j.
 func (t Transport) Less(i, j int) bool {
-	return t[i].ID < t[j].ID
+	return t[i].CheckSum < t[j].CheckSum
 }
 
 // Swap swaps the elements with indexes i and j.
@@ -37,11 +39,11 @@ func (t Transport) search(from, to int, id string) int {
 		return -1
 	}
 
-	if id == t[pivot].ID {
+	if id == t[pivot].CheckSum {
 		return pivot
 	}
 
-	if id > t[pivot].ID {
+	if id > t[pivot].CheckSum {
 		return t.search(pivot+1, to, id)
 	}
 

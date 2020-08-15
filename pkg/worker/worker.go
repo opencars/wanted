@@ -1,27 +1,19 @@
 package worker
 
 import (
-	"bufio"
 	"encoding/json"
-	"errors"
 	"io"
 
 	"github.com/emirpasic/gods/trees/redblacktree"
+
+	"github.com/opencars/wanted/pkg/bom"
 	"github.com/opencars/wanted/pkg/logger"
 	"github.com/opencars/wanted/pkg/model"
 	"github.com/opencars/wanted/pkg/store"
 )
 
-var (
-	ErrEmptyArr = errors.New("revision is empty")
-)
-
 type Worker struct {
 	tree *redblacktree.Tree
-}
-
-type Node struct {
-	Status model.Status
 }
 
 func New() *Worker {
@@ -30,34 +22,18 @@ func New() *Worker {
 	}
 }
 
-const (
-	bom0 = 0xef
-	bom1 = 0xbb
-	bom2 = 0xbf
-)
-
 func (w *Worker) Parse(revision string, input io.Reader) ([]model.Vehicle, []string, error) {
-	buf := bufio.NewReader(input)
-	b, err := buf.Peek(16)
-	if err == io.EOF {
-		return nil, nil, ErrEmptyArr
-	}
-
+	input, err := bom.NewReader(input)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	if b[0] == bom0 && b[1] == bom1 && b[2] == bom2 {
-		if _, err := buf.Discard(16); err != nil {
-			return nil, nil, err
-		}
-	}
-
-	dec := json.NewDecoder(buf)
+	dec := json.NewDecoder(input)
 	// Read the array open bracket.
 	if _, err := dec.Token(); err != nil {
 		return nil, nil, err
 	}
+
 	checked := make(map[string]bool)
 	removedNodes := make([]string, 0)
 	newTransport := make([]model.Vehicle, 0)
@@ -66,7 +42,6 @@ func (w *Worker) Parse(revision string, input io.Reader) ([]model.Vehicle, []str
 	for dec.More() {
 		var tmp model.WantedVehicle
 		err := dec.Decode(&tmp)
-
 		if err == io.EOF {
 			break
 		}
@@ -75,7 +50,8 @@ func (w *Worker) Parse(revision string, input io.Reader) ([]model.Vehicle, []str
 			return nil, nil, err
 		}
 
-		_, ok := w.tree.Get(tmp.ID)
+		tmp.CheckSum = tmp.CalculateCheckSum()
+		_, ok := w.tree.Get(tmp.CheckSum)
 		if !ok {
 			v, err := model.VehicleFromGov(revision, &tmp)
 			if err != nil {
@@ -85,7 +61,7 @@ func (w *Worker) Parse(revision string, input io.Reader) ([]model.Vehicle, []str
 			continue
 		}
 
-		checked[tmp.ID] = true
+		checked[tmp.CheckSum] = true
 	}
 
 	// Removed vehicles.
@@ -100,8 +76,7 @@ func (w *Worker) Parse(revision string, input io.Reader) ([]model.Vehicle, []str
 
 	// Append new stolen vehicles to state.
 	for _, v := range newTransport {
-		node := &Node{Status: v.Status}
-		w.tree.Put(v.ID, node)
+		w.tree.Put(v.CheckSum, NewNode(v.Status))
 	}
 
 	return newTransport, removedNodes, nil
@@ -114,8 +89,7 @@ func (w *Worker) Load(s store.Store) error {
 	}
 
 	for _, v := range vehicles {
-		node := &Node{Status: v.Status}
-		w.tree.Put(v.ID, node)
+		w.tree.Put(v.CheckSum, NewNode(v.Status))
 	}
 
 	logger.Info("Loaded %d vehicles", len(vehicles))

@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/opencars/wanted/pkg/utils"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/opencars/wanted/pkg/utils"
 )
 
 func TestTrim(t *testing.T) {

@@ -16,19 +16,19 @@ func (r *VehicleRepository) Create(revision *model.Revision, added []model.Vehic
 	}
 
 	for i, v := range added {
-		if _, ok := r.vehicles[v.ID]; !ok {
-			r.vehicles[v.ID] = &added[i]
+		if _, ok := r.vehicles[v.CheckSum]; !ok {
+			r.vehicles[v.CheckSum] = &added[i]
 		} else {
-			r.vehicles[v.ID].Status = added[i].Status
+			r.vehicles[v.CheckSum].Status = added[i].Status
 		}
 	}
 
 	for _, id := range removed {
 		if _, ok := r.vehicles[id]; !ok {
 			return store.ErrRecordNotFound
-		} else {
-			r.vehicles[id].Status = model.StatusRemoved
 		}
+
+		r.vehicles[id].Status = model.StatusRemoved
 	}
 
 	return nil

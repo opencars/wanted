@@ -2,7 +2,6 @@ package teststore
 
 import (
 	"github.com/opencars/wanted/pkg/model"
-
 	"github.com/opencars/wanted/pkg/store"
 )
 

@@ -15,7 +15,7 @@ import (
 // Works properly.
 func search(t Transport, id string) int {
 	for i, x := range t {
-		if x.ID == id {
+		if x.CheckSum == id {
 			return i
 		}
 	}
@@ -23,8 +23,8 @@ func search(t Transport, id string) int {
 }
 
 func TestTransport_Sort(t *testing.T) {
-	transport := Transport{{ID: "9"}, {ID: "8"}, {ID: "7"}, {ID: "6"}, {ID: "5"}, {ID: "4"}, {ID: "3"}, {ID: "2"}, {ID: "1"}}
-	expected := Transport{{ID: "1"}, {ID: "2"}, {ID: "3"}, {ID: "4"}, {ID: "5"}, {ID: "6"}, {ID: "7"}, {ID: "8"}, {ID: "9"}}
+	transport := Transport{{CheckSum: "9"}, {CheckSum: "8"}, {CheckSum: "7"}, {CheckSum: "6"}, {CheckSum: "5"}, {CheckSum: "4"}, {CheckSum: "3"}, {CheckSum: "2"}, {CheckSum: "1"}}
+	expected := Transport{{CheckSum: "1"}, {CheckSum: "2"}, {CheckSum: "3"}, {CheckSum: "4"}, {CheckSum: "5"}, {CheckSum: "6"}, {CheckSum: "7"}, {CheckSum: "8"}, {CheckSum: "9"}}
 
 	sort.Sort(transport)
 	assert.Equal(t, expected, transport)
@@ -36,14 +36,14 @@ func TestTransport_Search(t *testing.T) {
 	arr := Transport(make([]model.Vehicle, 0, 10000))
 
 	for i := 0; i < 10000; i++ {
-		arr = append(arr, model.Vehicle{ID: strconv.Itoa(rand.Int())})
+		arr = append(arr, model.Vehicle{CheckSum: strconv.Itoa(rand.Int())})
 	}
 
 	sort.Sort(arr)
 
 	for i := 0; i < 10000; i++ {
-		actual := arr.Search(arr[i].ID)
-		expected := search(arr, arr[i].ID)
+		actual := arr.Search(arr[i].CheckSum)
+		expected := search(arr, arr[i].CheckSum)
 		if expected != actual {
 			t.Errorf("failed, expected %d, got %d", expected, actual)
 		}
@@ -56,7 +56,7 @@ func BenchmarkTransport_Search(b *testing.B) {
 	arr := Transport(make([]model.Vehicle, 0, b.N))
 
 	for i := 0; i < b.N; i++ {
-		arr = append(arr, model.Vehicle{ID: strconv.Itoa(rand.Int())})
+		arr = append(arr, model.Vehicle{CheckSum: strconv.Itoa(rand.Int())})
 	}
 
 	sort.Sort(arr)
@@ -64,7 +64,7 @@ func BenchmarkTransport_Search(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		arr.Search(arr[i].ID)
+		arr.Search(arr[i].CheckSum)
 	}
 }
 
@@ -74,7 +74,7 @@ func BenchmarkTransport_search(b *testing.B) {
 	arr := Transport(make([]model.Vehicle, 0, b.N))
 
 	for i := 0; i < b.N; i++ {
-		arr = append(arr, model.Vehicle{ID: strconv.Itoa(rand.Int())})
+		arr = append(arr, model.Vehicle{CheckSum: strconv.Itoa(rand.Int())})
 	}
 
 	sort.Sort(arr)
@@ -82,6 +82,6 @@ func BenchmarkTransport_search(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		search(arr, arr[i].ID)
+		search(arr, arr[i].CheckSum)
 	}
 }

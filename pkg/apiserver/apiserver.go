@@ -1,20 +1,43 @@
 package apiserver
 
 import (
+	"context"
 	"net/http"
+	"os"
+	"time"
 
-	"github.com/opencars/wanted/pkg/config"
-	"github.com/opencars/wanted/pkg/store/postgres"
+	"github.com/gorilla/handlers"
+
+	"github.com/opencars/wanted/pkg/store"
 )
 
-// Start starts the server with postgres store.
-func Start(settings *config.Settings) error {
-	store, err := postgres.New(settings)
-	if err != nil {
-		return err
+// Start starts the server with specified store.
+func Start(ctx context.Context, addr string, store store.Store) error {
+	s := newServer(store)
+	srv := http.Server{
+		Addr:    addr,
+		Handler: handlers.LoggingHandler(os.Stdout, handlers.ProxyHeaders(s)),
 	}
 
-	srv := newServer(store)
+	errs := make(chan error)
+	go func() {
+		errs <- srv.ListenAndServe()
+	}()
 
-	return http.ListenAndServe(":8080", srv)
+	select {
+	case err := <-errs:
+		return err
+	case <-ctx.Done():
+		ctxShutDown, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+		defer func() {
+			cancel()
+		}()
+
+		err := srv.Shutdown(ctxShutDown)
+		if err != nil && err != http.ErrServerClosed {
+			return err
+		}
+
+		return nil
+	}
 }

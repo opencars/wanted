@@ -21,7 +21,7 @@ CREATE TABLE vehicles(
     "chassis_number" TEXT,
     "engine_number"  TEXT,
     "ovd"            TEXT             NOT NULL,
-    "kind"           TEXT             NOT NULL,
+    "kind"           TEXT,
     "status"         VEHICLE_STATUS_T NOT NULL DEFAULT 'stolen',
     "theft_date"     VARCHAR(10)      NOT NULL,
     "insert_date"    TIMESTAMP        NOT NULL

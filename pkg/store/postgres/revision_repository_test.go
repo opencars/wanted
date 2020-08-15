@@ -142,7 +142,7 @@ func TestMain(m *testing.M) {
 			Port:     5432,
 			User:     "postgres",
 			Password: os.Getenv("DATABASE_PASSWORD"),
-			Name:     "wanted_test",
+			Name:     "wanted",
 		},
 		Worker: config.Worker{
 			ResourceID: "06e65b06-3120-4713-8003-7905a83f95f5",

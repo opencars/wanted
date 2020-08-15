@@ -4,8 +4,8 @@ import (
 	"flag"
 
 	_ "github.com/lib/pq"
-
 	"github.com/opencars/govdata"
+
 	"github.com/opencars/wanted/pkg/bom"
 	"github.com/opencars/wanted/pkg/config"
 	"github.com/opencars/wanted/pkg/logger"
@@ -101,6 +101,7 @@ func main() {
 
 		record.Added = len(added)
 		record.Removed = len(removed)
+
 		// Save vehicles and revision.
 		if err := db.Vehicle().Create(record, added, removed); err != nil {
 			logger.WithFields(logger.Fields{

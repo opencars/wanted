@@ -14,7 +14,7 @@ type RevisionAPI struct {
 }
 
 // FindByID returns one revision found by it's unique id.
-func (api *RevisionAPI) FinByID() handler.Handler {
+func (api *RevisionAPI) FindByID() handler.Handler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		id := mux.Vars(r)["id"]
 

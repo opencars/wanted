@@ -30,22 +30,27 @@ func TestVehicle(t *testing.T) *Vehicle {
 	color := "СІРИЙ"
 	number := "СВ5501ВХ"
 	bodyNumber := "5YJSA1E28HF176944"
-
+	kind := "ЛЕГКОВИЙ"
+	maker := "TESLA"
+	model := "MODEL S"
+	
 	insertDate, err := time.Parse(TimeLayout, "2019-08-16T15:37:54")
 	if err != nil {
 		t.FailNow()
 	}
 
 	return &Vehicle{
-		ID:            "3019228562749883",
+		CheckSum:      "e8d9268a0d5b0f8235a3401013d72d9f",
 		Brand:         "TESLA - MODEL S",
+		Maker:         &maker,
+		Model:         &model,
 		Color:         &color,
 		Number:        &number,
 		BodyNumber:    &bodyNumber,
 		ChassisNumber: nil,
 		EngineNumber:  nil,
 		OVD:           "СОЛОМ’ЯНСЬКЕ УПРАВЛІННЯ ПОЛІЦІЇ ГУНП В М. КИЄВІ",
-		Kind:          "ЛЕГКОВИЙ",
+		Kind:          &kind,
 		Status:        "stolen",
 		RevisionID:    "17082019_1",
 		TheftDate:     "2019-08-16",

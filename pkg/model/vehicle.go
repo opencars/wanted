@@ -6,6 +6,7 @@ import (
 	"unicode"
 
 	"github.com/opencars/translit"
+
 	"github.com/opencars/wanted/pkg/cleansing"
 	"github.com/opencars/wanted/pkg/utils"
 )
@@ -28,7 +29,7 @@ const (
 
 // Vehicle represents storage model for vehicles entity.
 type Vehicle struct {
-	ID            string    `db:"id" json:"id"`
+	CheckSum      string    `db:"id" json:"id"`
 	Brand         string    `db:"brand" json:"brand"`
 	Maker         *string   `db:"maker" json:"maker,omitempty"`
 	Model         *string   `db:"model" json:"model,omitempty"`
@@ -38,7 +39,7 @@ type Vehicle struct {
 	ChassisNumber *string   `db:"chassis_number" json:"chassis_number,omitempty"`
 	EngineNumber  *string   `db:"engine_number" json:"engine_number,omitempty"`
 	OVD           string    `db:"ovd" json:"ovd"`
-	Kind          string    `db:"kind" json:"kind"`
+	Kind          *string   `db:"kind" json:"kind,omitempty"`
 	Status        Status    `db:"status" json:"status"`
 	RevisionID    string    `db:"revision_id" json:"revision_id"`
 	TheftDate     string    `db:"theft_date" json:"theft_date"`
@@ -82,16 +83,23 @@ func fixedNumber(number *string) *string {
 }
 
 func VehicleFromGov(revision string, vehicle *WantedVehicle) (*Vehicle, error) {
-	brand, kind := ParseKind(vehicle.Brand)
+	kind := vehicle.CarType
+	if kind != nil {
+		*kind = strings.TrimFunc(*kind, func(r rune) bool {
+			return !unicode.IsLetter(r) && !unicode.IsNumber(r)
+		})
 
-	// Remove unnecessary lexemes from vehicle kind.
-	for _, lexeme := range []string{"АВТОБУС ", "АВТОТРАНСПОРТ"} {
-		kind = strings.ReplaceAll(strings.ToUpper(kind), lexeme, "")
+		// Remove unnecessary lexemes from vehicle kind.
+		for _, lexeme := range []string{"АВТОБУС ", "АВТОТРАНСПОРТ"} {
+			*kind = strings.ReplaceAll(strings.ToUpper(*kind), lexeme, "")
+		}
+
+		*kind = strings.TrimFunc(*kind, func(r rune) bool {
+			return !unicode.IsLetter(r) && !unicode.IsNumber(r)
+		})
 	}
 
-	kind = strings.TrimFunc(kind, func(r rune) bool {
-		return !unicode.IsLetter(r) && !unicode.IsNumber(r)
-	})
+	brand := ParseBrand(vehicle.Brand)
 
 	inserted, err := time.Parse(TimeLayout, vehicle.InsertDate)
 	if err != nil {
@@ -99,7 +107,7 @@ func VehicleFromGov(revision string, vehicle *WantedVehicle) (*Vehicle, error) {
 	}
 
 	return &Vehicle{
-		ID:            vehicle.ID,
+		CheckSum:      vehicle.CheckSum,
 		Brand:         strings.ToUpper(strings.TrimSpace(brand)),
 		Color:         fixedColor(vehicle.Color),
 		Number:        fixedNumber(vehicle.Number),
@@ -107,7 +115,7 @@ func VehicleFromGov(revision string, vehicle *WantedVehicle) (*Vehicle, error) {
 		ChassisNumber: utils.Trim(vehicle.ChassisNumber),
 		EngineNumber:  utils.Trim(vehicle.EngineNumber),
 		OVD:           strings.TrimSpace(vehicle.OVD),
-		Kind:          kind,
+		Kind:          vehicle.CarType,
 		Status:        StatusStolen,
 		RevisionID:    revision,
 		TheftDate:     vehicle.TheftDate[0:10],

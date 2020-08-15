@@ -38,7 +38,7 @@ func (s *server) configureRouter() {
 
 	core.Handle("/api/v1/wanted/revisions", s.Revision().All())
 	core.Handle("/api/v1/wanted/revisions/stats", s.Revision().Stats())
-	core.Handle("/api/v1/wanted/revisions/{id}", s.Revision().FinByID())
+	core.Handle("/api/v1/wanted/revisions/{id}", s.Revision().FindByID())
 
 	core.Handle("/api/v1/wanted/swagger.yml", s.Swagger())
 	core.Handle("/api/v1/wanted/version", handler.Handler(s.Version))
@@ -83,13 +83,13 @@ func (s *server) Vehicle() *VehicleAPI {
 	return s.vehicleAPI
 }
 
-func (_ *server) Swagger() http.HandlerFunc {
+func (*server) Swagger() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "./docs/swagger.yml")
 	}
 }
 
-func (_ *server) Version(w http.ResponseWriter, r *http.Request) error {
+func (*server) Version(w http.ResponseWriter, r *http.Request) error {
 	v := struct {
 		Version string `json:"version"`
 		Go      string `json:"go"`
@@ -105,7 +105,7 @@ func (_ *server) Version(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func (server *server) limit(r *http.Request) (uint64, error) {
+func (*server) limit(r *http.Request) (uint64, error) {
 	limit, err := strconv.ParseUint(r.URL.Query().Get("limit"), 10, 64)
 	if err != nil {
 		return 100, nil

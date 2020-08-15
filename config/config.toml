@@ -9,7 +9,7 @@ max_retries = 0
 pool = 10
 
 [worker]
-resource_id = "06e65b06-3120-4713-8003-7905a83f95f5"
+resource_id = "e43a82da-89e1-4bbb-820c-bd04ab7a0c89"
 
 [cleansing]
     [cleansing.brand]

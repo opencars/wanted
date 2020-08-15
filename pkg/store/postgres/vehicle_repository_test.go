@@ -1,7 +1,6 @@
 package postgres_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -41,7 +40,6 @@ func TestVehicleRepository_FindByNumber(t *testing.T) {
 	vehicles, err = s.Vehicle().FindByNumber(*vehicle.Number)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, vehicles)
-	fmt.Println(vehicles[0].TheftDate)
 	assert.Equal(t, *vehicle, vehicles[0])
 }
 
@@ -95,7 +93,7 @@ func TestVehicleRepository_AllWithLimit(t *testing.T) {
 
 	vehicle1 := model.TestVehicle(t)
 	vehicle2 := model.TestVehicle(t)
-	vehicle2.ID += "x"
+	vehicle2.CheckSum += "x"
 
 	revision := model.TestRevision(t)
 	vehicle1.RevisionID = revision.ID
@@ -127,7 +125,7 @@ func TestVehicleRepository_All(t *testing.T) {
 
 	vehicle1 := model.TestVehicle(t)
 	vehicle2 := model.TestVehicle(t)
-	vehicle2.ID += "x"
+	vehicle2.CheckSum += "x"
 
 	revision := model.TestRevision(t)
 	vehicle1.RevisionID = revision.ID

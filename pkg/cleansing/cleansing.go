@@ -35,5 +35,10 @@ func (c *Cleansing) Brand(lexeme string) (string, string, error) {
 		return maker, model, nil
 	}
 
+	parts := strings.Split(lexeme, "-")
+	if len(parts) == 2 {
+		return strings.TrimSpace(parts[0]), strings.TrimSpace(parts[1]), nil
+	}
+
 	return "", "", errors.New("failed to match")
 }
