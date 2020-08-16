@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/opencars/govdata"
+
 	"github.com/opencars/wanted/pkg/bom"
 	"github.com/opencars/wanted/pkg/logger"
 )

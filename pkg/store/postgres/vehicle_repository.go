@@ -15,7 +15,7 @@ func (r *VehicleRepository) All() ([]model.Vehicle, error) {
 	vehicles := make([]model.Vehicle, 0)
 
 	err := r.store.db.Select(&vehicles,
-		`SELECT id, ovd, brand, kind, color, number,
+		`SELECT id, ovd, brand, kind, maker, model, color, number,
 				body_number, chassis_number, engine_number,
 				status, theft_date, insert_date, revision_id
 		FROM vehicles ORDER BY theft_date`,
@@ -62,7 +62,7 @@ func (r *VehicleRepository) FindByNumber(number string) ([]model.Vehicle, error)
 	vehicles := make([]model.Vehicle, 0)
 
 	err := r.store.db.Select(&vehicles,
-		`SELECT id, ovd, brand, kind, color, number,
+		`SELECT id, ovd, brand, maker, model, kind, color, number,
 				body_number, chassis_number, engine_number,
 				status, theft_date, insert_date, revision_id
 		FROM vehicles
@@ -84,7 +84,7 @@ func (r *VehicleRepository) FindByVIN(vin string) ([]model.Vehicle, error) {
 	vehicles := make([]model.Vehicle, 0)
 
 	err := r.store.db.Select(&vehicles,
-		`SELECT id, ovd, brand, kind, color, number,
+		`SELECT id, ovd, brand, maker, model, kind, color, number,
 				body_number, chassis_number, engine_number,
 				status, theft_date, insert_date, revision_id
 		FROM vehicles
@@ -106,7 +106,7 @@ func (r *VehicleRepository) FindByRevisionID(id string) ([]model.Vehicle, error)
 	vehicles := make([]model.Vehicle, 0)
 
 	err := r.store.db.Select(&vehicles,
-		`SELECT id, ovd, brand, kind, color, number,
+		`SELECT id, ovd, brand, kind, maker, model, color, number,
 				body_number, chassis_number, engine_number,
 				status, theft_date, insert_date, revision_id
 		FROM vehicles
@@ -128,7 +128,7 @@ func (r *VehicleRepository) AllWithLimit(limit uint64) ([]model.Vehicle, error) 
 	vehicles := make([]model.Vehicle, 0)
 
 	err := r.store.db.Select(&vehicles,
-		`SELECT id, ovd, brand, kind, color, number,
+		`SELECT id, ovd, brand, kind, maker, model, color, number,
 					  body_number, chassis_number, engine_number,
 					  status, theft_date, insert_date, revision_id
 			FROM vehicles
