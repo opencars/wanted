@@ -42,16 +42,9 @@ func (s *Store) Vehicle() store.VehicleRepository {
 }
 
 func New(conf *config.Settings) (*Store, error) {
-	var info string
-	if conf.DB.Password == "" {
-		info = fmt.Sprintf("host=%s port=%d user=%s dbname=%s sslmode=disable",
-			conf.DB.Host, conf.DB.Port, conf.DB.User, conf.DB.Name,
-		)
-	} else {
-		info = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-			conf.DB.Host, conf.DB.Port, conf.DB.User, conf.DB.Password, conf.DB.Name,
-		)
-	}
+	info := fmt.Sprintf("host=%s port=%d user=%s dbname=%s sslmode=%s password=%s",
+		conf.DB.Host, conf.DB.Port, conf.DB.User, conf.DB.Name, conf.DB.SSLMode, conf.DB.Password,
+	)
 
 	db, err := sqlx.Connect("postgres", info)
 	if err != nil {

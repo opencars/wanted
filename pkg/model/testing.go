@@ -33,7 +33,7 @@ func TestVehicle(t *testing.T) *Vehicle {
 	kind := "ЛЕГКОВИЙ"
 	maker := "TESLA"
 	model := "MODEL S"
-	
+
 	insertDate, err := time.Parse(TimeLayout, "2019-08-16T15:37:54")
 	if err != nil {
 		t.FailNow()

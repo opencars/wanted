@@ -20,6 +20,7 @@ type Database struct {
 	User     string `toml:"username"`
 	Password string `toml:"password"`
 	Name     string `toml:"database"`
+	SSLMode  string `toml:"ssl_mode"`
 }
 
 // Worker contains settings for data processing by cmd/worker.
@@ -37,7 +38,7 @@ type BrandCleansing struct {
 	Matchers []Matcher `toml:"matchers"`
 }
 
-// BrandCleansing contains patterns for vehicle brand cleansing.
+// Matcher contains patterns for vehicle brand cleansing.
 type Matcher struct {
 	Pattern string `toml:"pattern"`
 	Maker   string `toml:"maker"`
