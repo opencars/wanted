@@ -42,7 +42,7 @@ func (s *Store) Vehicle() store.VehicleRepository {
 }
 
 func New(conf *config.Settings) (*Store, error) {
-	info := fmt.Sprintf("host=%s port=%d user=%s dbname=%s sslmode=%s password=%s",
+	info := fmt.Sprintf("host=%s port=%d user=%s dbname=%s sslmode=%s password=%s",	
 		conf.DB.Host, conf.DB.Port, conf.DB.User, conf.DB.Name, conf.DB.SSLMode, conf.DB.Password,
 	)
 

@@ -209,7 +209,7 @@ func TestCleansing_Brand_5(t *testing.T) {
 }
 
 func TestMain(m *testing.M) {
-	conf, err := config.New("../../config/config.toml")
+	conf, err := config.New("../../config/config.yaml")
 	if err != nil {
 		panic(err)
 	}

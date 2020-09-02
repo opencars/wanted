@@ -17,7 +17,7 @@ import (
 func main() {
 	var path string
 
-	flag.StringVar(&path, "config", "./config/config.toml", "Path to the configuration file")
+	flag.StringVar(&path, "config", "./config/config.yaml", "Path to the configuration file")
 
 	flag.Parse()
 

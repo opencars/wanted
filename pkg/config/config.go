@@ -1,48 +1,49 @@
 package config
 
 import (
+	"os"
 	"strconv"
 
-	"github.com/BurntSushi/toml"
+	"gopkg.in/yaml.v2"
 )
 
 // Settings is decoded configuration file.
 type Settings struct {
-	DB        Database  `toml:"database"`
-	Worker    Worker    `toml:"worker"`
-	Cleansing Cleansing `toml:"cleansing"`
+	DB        Database  `yaml:"database"`
+	Worker    Worker    `yaml:"worker"`
+	Cleansing Cleansing `yaml:"cleansing"`
 }
 
 // Database contains configuration details for database.
 type Database struct {
-	Host     string `toml:"host"`
-	Port     int    `toml:"port"`
-	User     string `toml:"username"`
-	Password string `toml:"password"`
-	Name     string `toml:"database"`
-	SSLMode  string `toml:"ssl_mode"`
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	User     string `yaml:"username"`
+	Password string `yaml:"password"`
+	Name     string `yaml:"database"`
+	SSLMode  string `yaml:"ssl_mode"`
 }
 
 // Worker contains settings for data processing by cmd/worker.
 type Worker struct {
-	ResourceID string `toml:"resource_id"`
+	ResourceID string `yaml:"resource_id"`
 }
 
 // Cleansing contains rules and setting for data cleansing.
 type Cleansing struct {
-	Brand BrandCleansing `toml:"brand"`
+	Brand BrandCleansing `yaml:"brand"`
 }
 
 // BrandCleansing contains rules and setting for vehicle brand cleansing.
 type BrandCleansing struct {
-	Matchers []Matcher `toml:"matchers"`
+	Matchers []Matcher `yaml:"matchers"`
 }
 
 // Matcher contains patterns for vehicle brand cleansing.
 type Matcher struct {
-	Pattern string `toml:"pattern"`
-	Maker   string `toml:"maker"`
-	Model   string `toml:"model"`
+	Pattern string `yaml:"pattern"`
+	Maker   string `yaml:"maker"`
+	Model   string `yaml:"model"`
 }
 
 // Address return API address in "host:port" format.
@@ -52,10 +53,16 @@ func (db *Database) Address() string {
 
 // New reads application configuration from specified file path.
 func New(path string) (*Settings, error) {
-	config := &Settings{}
-	if _, err := toml.DecodeFile(path, config); err != nil {
+	var config Settings
+
+	f, err := os.Open(path)
+	if err != nil {
 		return nil, err
 	}
 
-	return config, nil
+	if err := yaml.NewDecoder(f).Decode(&config); err != nil {
+		return nil, err
+	}
+
+	return &config, nil
 }
