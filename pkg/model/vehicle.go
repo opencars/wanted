@@ -30,7 +30,7 @@ const (
 // Vehicle represents storage model for vehicles entity.
 type Vehicle struct {
 	CheckSum      string    `db:"id" json:"id"`
-	Brand         string    `db:"brand" json:"brand"`
+	Brand         *string   `db:"brand" json:"brand"`
 	Maker         *string   `db:"maker" json:"maker,omitempty"`
 	Model         *string   `db:"model" json:"model,omitempty"`
 	Color         *string   `db:"color" json:"color,omitempty"`
@@ -47,11 +47,11 @@ type Vehicle struct {
 }
 
 func (v *Vehicle) BeforeCreate(c *cleansing.Cleansing) {
-	if v.Brand == "" {
+	if v.Brand == nil || *v.Brand == "" {
 		return
 	}
 
-	maker, model, err := c.Brand(v.Brand)
+	maker, model, err := c.Brand(*v.Brand)
 	if err != nil {
 		return
 	}
@@ -99,7 +99,7 @@ func VehicleFromGov(revision string, vehicle *WantedVehicle) (*Vehicle, error) {
 		})
 	}
 
-	brand := ParseBrand(vehicle.Brand)
+	brand := strings.ToUpper(strings.TrimSpace(ParseBrand(vehicle.Brand)))
 
 	inserted, err := time.Parse(TimeLayout, vehicle.InsertDate)
 	if err != nil {
@@ -108,7 +108,7 @@ func VehicleFromGov(revision string, vehicle *WantedVehicle) (*Vehicle, error) {
 
 	return &Vehicle{
 		CheckSum:      vehicle.CheckSum,
-		Brand:         strings.ToUpper(strings.TrimSpace(brand)),
+		Brand:         &brand,
 		Color:         fixedColor(vehicle.Color),
 		Number:        fixedNumber(vehicle.Number),
 		BodyNumber:    utils.Trim(vehicle.BodyNumber),

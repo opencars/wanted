@@ -33,6 +33,7 @@ func TestVehicle(t *testing.T) *Vehicle {
 	kind := "ЛЕГКОВИЙ"
 	maker := "TESLA"
 	model := "MODEL S"
+	brand := "TESLA - MODEL S"
 
 	insertDate, err := time.Parse(TimeLayout, "2019-08-16T15:37:54")
 	if err != nil {
@@ -41,7 +42,7 @@ func TestVehicle(t *testing.T) *Vehicle {
 
 	return &Vehicle{
 		CheckSum:      "e8d9268a0d5b0f8235a3401013d72d9f",
-		Brand:         "TESLA - MODEL S",
+		Brand:         &brand,
 		Maker:         &maker,
 		Model:         &model,
 		Color:         &color,
