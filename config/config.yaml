@@ -1,11 +1,10 @@
 database:
-  host: "127.0.0.1"
+  host: 164.90.242.241
   port: 5432
-  username: "postgres"
-  password: "password"
-  database: "wanted"
-  ssl_mode: "disable"
-
+  username: postgres
+  password: NvBD8kieBorVaWUh
+  database: wanted
+  ssl_mode: require
 worker:
   resource_id: "e43a82da-89e1-4bbb-820c-bd04ab7a0c89"
 
