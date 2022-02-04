@@ -5,15 +5,11 @@ import (
 	"time"
 	"unicode"
 
+	"github.com/araddon/dateparse"
 	"github.com/opencars/translit"
 
 	"github.com/opencars/wanted/pkg/cleansing"
 	"github.com/opencars/wanted/pkg/utils"
-)
-
-const (
-	// TimeLayout represent time layout for parsing time.
-	TimeLayout = "2006-01-02T15:04:05"
 )
 
 // Status represent status of the vehicle search.
@@ -101,7 +97,7 @@ func VehicleFromGov(revision string, vehicle *WantedVehicle) (*Vehicle, error) {
 
 	brand := strings.ToUpper(strings.TrimSpace(ParseBrand(vehicle.Brand)))
 
-	inserted, err := time.Parse(TimeLayout, vehicle.InsertDate)
+	inserted, err := dateparse.ParseAny(vehicle.InsertDate)
 	if err != nil {
 		return nil, err
 	}

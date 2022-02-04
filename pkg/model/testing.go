@@ -2,14 +2,14 @@ package model
 
 import (
 	"testing"
-	"time"
+
+	"github.com/araddon/dateparse"
 )
 
 func TestRevision(t *testing.T) *Revision {
 	t.Helper()
 
-	layout, str := "2006-01-02 15:04:05", "2018-10-01 22:38:14"
-	createdAt, err := time.Parse(layout, str)
+	createdAt, err := dateparse.ParseAny("2018-10-01 22:38:14")
 	if err != nil {
 		t.FailNow()
 	}
@@ -35,7 +35,7 @@ func TestVehicle(t *testing.T) *Vehicle {
 	model := "MODEL S"
 	brand := "TESLA - MODEL S"
 
-	insertDate, err := time.Parse(TimeLayout, "2019-08-16T15:37:54")
+	insertDate, err := dateparse.ParseAny("2019-08-16T15:37:54+03:00")
 	if err != nil {
 		t.FailNow()
 	}
@@ -55,6 +55,6 @@ func TestVehicle(t *testing.T) *Vehicle {
 		Status:        "stolen",
 		RevisionID:    "17082019_1",
 		TheftDate:     "2019-08-16",
-		InsertDate:    insertDate,
+		InsertDate:    insertDate.UTC(),
 	}
 }
