@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 
 	"github.com/opencars/wanted/pkg/store"
@@ -42,16 +41,6 @@ func (s *server) configureRouter() {
 	core.Handle("/api/v1/wanted/vehicles", s.Vehicle().FindByVIN()).Queries("vin", "{vin}")
 	core.Handle("/api/v1/wanted/vehicles", s.Vehicle().FindByRevisionID()).Queries("revision", "{revision}")
 	core.Handle("/api/v1/wanted/vehicles", s.Vehicle().All())
-}
-
-func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	origins := handlers.AllowedOrigins([]string{"*"})
-	methods := handlers.AllowedMethods([]string{"GET", "OPTIONS"})
-	headers := handlers.AllowedHeaders([]string{"Api-Key", "X-Api-Key"})
-
-	cors := handlers.CORS(origins, methods, headers)(s.router)
-	compress := handlers.CompressHandler(cors)
-	compress.ServeHTTP(w, r)
 }
 
 func (s *server) Revision() *RevisionAPI {

@@ -16,7 +16,7 @@ func Start(ctx context.Context, addr string, store store.Store) error {
 	s := newServer(store)
 	srv := http.Server{
 		Addr:    addr,
-		Handler: handlers.LoggingHandler(os.Stdout, handlers.ProxyHeaders(s)),
+		Handler: handlers.LoggingHandler(os.Stdout, handlers.ProxyHeaders(s.router)),
 	}
 
 	errs := make(chan error)
