@@ -6,9 +6,9 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/opencars/govdata"
 
+	"github.com/opencars/seedwork/logger"
 	"github.com/opencars/wanted/pkg/bom"
 	"github.com/opencars/wanted/pkg/config"
-	"github.com/opencars/wanted/pkg/logger"
 	"github.com/opencars/wanted/pkg/model"
 	"github.com/opencars/wanted/pkg/store/postgres"
 	"github.com/opencars/wanted/pkg/worker"
@@ -24,31 +24,31 @@ func main() {
 	// Get configuration.
 	conf, err := config.New(path)
 	if err != nil {
-		logger.Fatal(err)
+		logger.Fatalf("failed to read config: %s", err)
 	}
 
 	// Register postgres adapter.
 	db, err := postgres.New(conf)
 	if err != nil {
-		logger.Fatal(err)
+		logger.Fatalf("failed to connect to postgres: %s", err)
 	}
 
 	resource, err := govdata.ResourceShow(conf.Worker.ResourceID)
 	if err != nil {
-		logger.Fatal(err)
+		logger.Fatalf("govdata: %s", err)
 	}
 
 	w := worker.New()
 	if err := w.Load(db); err != nil {
-		logger.Fatal(err)
+		logger.Fatalf("failed to start worker: %s", err)
 	}
 
 	last, err := db.Revision().Last()
 	if err != nil {
-		logger.Fatal(err)
+		logger.Fatalf("failed to postgres: %s", err)
 	}
 
-	logger.Info("Last revision: %s", last.ID)
+	logger.Infof("Last revision: %s", last.ID)
 	revisions := govdata.Subscribe(conf.Worker.ResourceID, last.CreatedAt)
 
 	// Listen for new revisions.
@@ -57,13 +57,13 @@ func main() {
 
 		logger.WithFields(logger.Fields{
 			"revision": record.ID,
-		}).Info("Started processing revision")
+		}).Infof("Started processing revision")
 
 		body, err := govdata.ResourceRevision(resource.PackageID, conf.Worker.ResourceID, record.ID)
 		if err != nil {
 			logger.WithFields(logger.Fields{
 				"revision": record.ID,
-			}).Fatal(err)
+			}).Fatalf("govadata failed: %s", err)
 		}
 
 		reader, err := bom.NewReader(body)
@@ -71,7 +71,7 @@ func main() {
 			logger.WithFields(logger.Fields{
 				"revision": revision,
 				"err":      err,
-			}).Error("Broken bom encoding. Skipped")
+			}).Errorf("Broken bom encoding. Skipped")
 			continue
 		}
 
@@ -79,7 +79,7 @@ func main() {
 		if err == worker.ErrEmptyArr {
 			logger.WithFields(logger.Fields{
 				"revision": revision,
-			}).Error("Revision is empty. Skipped")
+			}).Errorf("Revision is empty. Skipped")
 			continue
 		}
 
@@ -87,7 +87,7 @@ func main() {
 			logger.WithFields(logger.Fields{
 				"revision": revision,
 				"err":      err,
-			}).Error("Revision is broken. Skipped")
+			}).Errorf("Revision is broken. Skipped")
 			continue
 		}
 
@@ -95,7 +95,7 @@ func main() {
 			logger.WithFields(logger.Fields{
 				"revision": revision,
 				"err":      err,
-			}).Error("Failed to close body. Skipped")
+			}).Errorf("Failed to close body. Skipped")
 			continue
 		}
 
@@ -106,13 +106,13 @@ func main() {
 		if err := db.Vehicle().Create(record, added, removed); err != nil {
 			logger.WithFields(logger.Fields{
 				"revision": revision,
-			}).Fatal(err)
+			}).Fatalf("failed to create vehicle: %s", err)
 		}
 
 		logger.WithFields(logger.Fields{
 			"revision": record.ID,
 			"added":    len(added),
 			"removed":  len(removed),
-		}).Info("Finished processing revision")
+		}).Infof("Finished processing revision")
 	}
 }

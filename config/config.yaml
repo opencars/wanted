@@ -5,52 +5,53 @@ database:
   password: NvBD8kieBorVaWUh
   database: wanted
   ssl_mode: require
+
 worker:
   resource_id: "e43a82da-89e1-4bbb-820c-bd04ab7a0c89"
 
 cleansing:
   brand:
     matchers:
-    - pattern: '^(S[UY]ZUK[ІI]|[CС][YУ][З3][YУ][KК][ІIИ]{0,1})[\s-]*(.*)$'
-      maker: 'SUZUKI'
-      model: '$2'
+      - pattern: '^(S[UY]ZUK[ІI]|[CС][YУ][З3][YУ][KК][ІIИ]{0,1})[\s-]*(.*)$'
+        maker: "SUZUKI"
+        model: "$2"
 
-    - pattern: '^([HН][ОO]ND[АA]|[ХХ][ОО][HН]Д[АА])[\s-]*(D[IІ][ОО]|ДИ[ОО])[\s-]*(.*)$'
-      maker: 'HONDA'
-      model: 'DIO $3'
+      - pattern: '^([HН][ОO]ND[АA]|[ХХ][ОО][HН]Д[АА])[\s-]*(D[IІ][ОО]|ДИ[ОО])[\s-]*(.*)$'
+        maker: "HONDA"
+        model: "DIO $3"
 
-    - pattern: '^([HН][ОO]ND[АA]|[ХХ][ОО][HН]Д[АА])[\s-]*([CС]R[\s-]*V)[\s-]*(.*)$'
-      maker: 'HONDA'
-      model: 'CR-V $3'
+      - pattern: '^([HН][ОO]ND[АA]|[ХХ][ОО][HН]Д[АА])[\s-]*([CС]R[\s-]*V)[\s-]*(.*)$'
+        maker: "HONDA"
+        model: "CR-V $3"
 
-    - pattern: '^([HН][ОO]ND[АA]|[ХХ][ОО][HН]Д[АА])[\s-]*(.*)$'
-      maker: 'HONDA'
-      model: '$2'
+      - pattern: '^([HН][ОO]ND[АA]|[ХХ][ОО][HН]Д[АА])[\s-]*(.*)$'
+        maker: "HONDA"
+        model: "$2"
 
-    - pattern: '^([HН][ОO]ND[АA]|[ХХ][ОО][HН]Д[АА])[\s-]*(.*)$'
-      maker: 'HONDA'
-      model: '$2'
+      - pattern: '^([HН][ОO]ND[АA]|[ХХ][ОО][HН]Д[АА])[\s-]*(.*)$'
+        maker: "HONDA"
+        model: "$2"
 
-    - pattern: '^(D[AА]{0,1}[EЕ]W[OО]{1,2}|D[EЕ][OО]|Д[EЭ][OОYУ])[\s-]*(S[ЕE]NS|[СC][ЕE][HН][СC])[\s-]*(.*)$'
-      maker: 'DAEWOO'
-      model: 'SENS $3'
+      - pattern: '^(D[AА]{0,1}[EЕ]W[OО]{1,2}|D[EЕ][OО]|Д[EЭ][OОYУ])[\s-]*(S[ЕE]NS|[СC][ЕE][HН][СC])[\s-]*(.*)$'
+        maker: "DAEWOO"
+        model: "SENS $3"
 
-    - pattern: '^(D[AА]{0,1}[EЕ]W[OО]{1,2}|D[EЕ][OО]|Д[EЭ][OОYУ])[\s-]*(L[AА]N[OО]S|Л[AА]Н[OО][CС])[\s-]*(.*)$'
-      maker: 'DAEWOO'
-      model: 'LANOS $3'
+      - pattern: '^(D[AА]{0,1}[EЕ]W[OО]{1,2}|D[EЕ][OО]|Д[EЭ][OОYУ])[\s-]*(L[AА]N[OО]S|Л[AА]Н[OО][CС])[\s-]*(.*)$'
+        maker: "DAEWOO"
+        model: "LANOS $3"
 
-    - pattern: '^(D[AА]{0,1}[EЕ]W[OО]{1,2}|D[EЕ][OО]|Д[EЭ][OОYУ])[\s-]*(.*)$'
-      maker: 'DAEWOO'
-      model: '$2'
+      - pattern: '^(D[AА]{0,1}[EЕ]W[OО]{1,2}|D[EЕ][OО]|Д[EЭ][OОYУ])[\s-]*(.*)$'
+        maker: "DAEWOO"
+        model: "$2"
 
-    - pattern: '^(Y[[AА][MМ][АA][НH][АA]|ЯМ[АA][ХX][АA])[\s-]*(.*)$'
-      maker: 'YAMAHA'
-      model: '$2'
+      - pattern: '^(Y[[AА][MМ][АA][НH][АA]|ЯМ[АA][ХX][АA])[\s-]*(.*)$'
+        maker: "YAMAHA"
+        model: "$2"
 
-    - pattern: '^(J[АA]W[АA]|Я[BВ][АA])[\s-]*(.*)$'
-      maker: 'JAWA'
-      model: '$2'
+      - pattern: '^(J[АA]W[АA]|Я[BВ][АA])[\s-]*(.*)$'
+        maker: "JAWA"
+        model: "$2"
 
-    - pattern: '^([BВ][АA][3З])[\s-]*(.*)$'
-      maker: 'ВАЗ'
-      model: '$2'
+      - pattern: '^([BВ][АA][3З])[\s-]*(.*)$'
+        maker: "ВАЗ"
+        model: "$2"

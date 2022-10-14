@@ -1,7 +1,6 @@
 .PHONY: default all clean
 APPS     := server worker pull
 BLDDIR   := bin
-VERSION  := $(shell cat VERSION)
 
 .EXPORT_ALL_VARIABLES:
 GO111MODULE  = on

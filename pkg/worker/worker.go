@@ -6,8 +6,8 @@ import (
 
 	"github.com/emirpasic/gods/trees/redblacktree"
 
+	"github.com/opencars/seedwork/logger"
 	"github.com/opencars/wanted/pkg/bom"
-	"github.com/opencars/wanted/pkg/logger"
 	"github.com/opencars/wanted/pkg/model"
 	"github.com/opencars/wanted/pkg/store"
 )
@@ -92,7 +92,7 @@ func (w *Worker) Load(s store.Store) error {
 		w.tree.Put(v.CheckSum, NewNode(v.Status))
 	}
 
-	logger.Info("Loaded %d vehicles", len(vehicles))
+	logger.Infof("Loaded %d vehicles", len(vehicles))
 
 	return nil
 }
