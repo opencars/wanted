@@ -1,17 +1,13 @@
 package apiserver
 
 import (
-	"encoding/json"
 	"net/http"
-	"runtime"
 	"strconv"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 
-	"github.com/opencars/wanted/pkg/handler"
 	"github.com/opencars/wanted/pkg/store"
-	"github.com/opencars/wanted/pkg/version"
 )
 
 type server struct {
@@ -41,7 +37,6 @@ func (s *server) configureRouter() {
 	core.Handle("/api/v1/wanted/revisions/{id}", s.Revision().FindByID())
 
 	core.Handle("/api/v1/wanted/swagger.yml", s.Swagger())
-	core.Handle("/api/v1/wanted/version", handler.Handler(s.Version))
 
 	core.Handle("/api/v1/wanted/vehicles", s.Vehicle().FindByNumber()).Queries("number", "{number}")
 	core.Handle("/api/v1/wanted/vehicles", s.Vehicle().FindByVIN()).Queries("vin", "{vin}")
@@ -87,22 +82,6 @@ func (*server) Swagger() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "./docs/swagger.yml")
 	}
-}
-
-func (*server) Version(w http.ResponseWriter, r *http.Request) error {
-	v := struct {
-		Version string `json:"version"`
-		Go      string `json:"go"`
-	}{
-		Version: version.Version,
-		Go:      runtime.Version(),
-	}
-
-	if err := json.NewEncoder(w).Encode(v); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func (*server) limit(r *http.Request) (uint64, error) {

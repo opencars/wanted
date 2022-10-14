@@ -1,6 +1,4 @@
-FROM golang:1.17-alpine AS build
-
-ENV GO111MODULE=on
+FROM golang:1.19-alpine AS build
 
 WORKDIR /go/src/app
 
@@ -14,9 +12,8 @@ RUN go mod download
 
 COPY . .
 
-RUN export VERSION=$(cat VERSION) && \
-    go build -ldflags "-X github.com/opencars/wanted/pkg/version.Version=$VERSION" -o /go/bin/server ./cmd/server/main.go && \
-    go build -ldflags "-X github.com/opencars/wanted/pkg/version.Version=$VERSION" -o /go/bin/worker ./cmd/worker/main.go
+RUN go build -o /go/bin/server ./cmd/server/main.go && \
+    go build -o /go/bin/worker ./cmd/worker/main.go
 
 FROM alpine
 
