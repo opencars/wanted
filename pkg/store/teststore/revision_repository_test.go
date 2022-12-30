@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/opencars/wanted/pkg/model"
+	"github.com/opencars/wanted/pkg/domain/model"
 	"github.com/opencars/wanted/pkg/store/teststore"
 )
 

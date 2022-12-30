@@ -4,7 +4,8 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/opencars/wanted/pkg/model"
+	"github.com/opencars/wanted/pkg/domain/model"
+	"github.com/opencars/wanted/pkg/domain/query"
 )
 
 type VehicleRepository struct {
@@ -203,4 +204,28 @@ func (r *VehicleRepository) Create(revision *model.Revision, added []model.Vehic
 	}
 
 	return nil
+}
+
+func (r *VehicleRepository) Find(ctx context.Context, q *query.Find) (*query.FindResult, error) {
+	vehicles := make([]model.Vehicle, 0)
+
+	err := r.store.db.Select(&vehicles,
+		`SELECT id, ovd, brand, maker, model, kind, color, number,
+				body_number, chassis_number, engine_number,
+				status, theft_date, insert_date, revision_id
+		FROM vehicles
+		WHERE body_number IN $1 OR chassis_number IN $1 OR engine_number IN $1 OR number IN $2`,
+		q.VINs, q.Numbers,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	for i := range vehicles {
+		vehicles[i].InsertDate = vehicles[i].InsertDate.UTC()
+	}
+
+	return &query.FindResult{
+		Vehicles: vehicles,
+	}, nil
 }

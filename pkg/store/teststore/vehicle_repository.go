@@ -1,8 +1,7 @@
 package teststore
 
 import (
-	"github.com/opencars/wanted/pkg/model"
-	"github.com/opencars/wanted/pkg/store"
+	"github.com/opencars/wanted/pkg/domain/model"
 )
 
 type VehicleRepository struct {
@@ -25,7 +24,7 @@ func (r *VehicleRepository) Create(revision *model.Revision, added []model.Vehic
 
 	for _, id := range removed {
 		if _, ok := r.vehicles[id]; !ok {
-			return store.ErrRecordNotFound
+			return model.ErrNotFound
 		}
 
 		r.vehicles[id].Status = model.StatusRemoved

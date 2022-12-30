@@ -8,8 +8,8 @@ import (
 
 	"github.com/opencars/seedwork/logger"
 	"github.com/opencars/wanted/pkg/bom"
-	"github.com/opencars/wanted/pkg/model"
-	"github.com/opencars/wanted/pkg/store"
+	"github.com/opencars/wanted/pkg/domain"
+	"github.com/opencars/wanted/pkg/domain/model"
 )
 
 type Worker struct {
@@ -82,7 +82,7 @@ func (w *Worker) Parse(revision string, input io.Reader) ([]model.Vehicle, []str
 	return newTransport, removedNodes, nil
 }
 
-func (w *Worker) Load(s store.Store) error {
+func (w *Worker) Load(s domain.Store) error {
 	vehicles, err := s.Vehicle().All()
 	if err != nil {
 		return err

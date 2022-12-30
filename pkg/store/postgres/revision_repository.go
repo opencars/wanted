@@ -4,8 +4,7 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/opencars/wanted/pkg/model"
-	"github.com/opencars/wanted/pkg/store"
+	"github.com/opencars/wanted/pkg/domain/model"
 )
 
 type RevisionRepository struct {
@@ -27,7 +26,7 @@ func (r *RevisionRepository) FindByID(id string) (*model.Revision, error) {
 	err := r.store.db.Get(&revision, `SELECT * FROM revisions WHERE id LIKE $1`, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, store.ErrRecordNotFound
+			return nil, model.ErrNotFound
 		}
 		return nil, err
 	}

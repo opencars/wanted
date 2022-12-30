@@ -6,8 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/opencars/wanted/pkg/model"
-	"github.com/opencars/wanted/pkg/store"
+	"github.com/opencars/wanted/pkg/domain/model"
 	"github.com/opencars/wanted/pkg/store/postgres"
 )
 
@@ -27,7 +26,7 @@ func TestRevisionRepository_FindByID(t *testing.T) {
 
 	id := "example"
 	_, err := s.Revision().FindByID(id)
-	assert.Equal(t, store.ErrRecordNotFound, err)
+	assert.Equal(t, model.ErrNotFound, err)
 
 	revision := model.TestRevision(t)
 	revision.ID = id

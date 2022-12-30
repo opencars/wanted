@@ -1,7 +1,7 @@
 package store
 
 import (
-	"github.com/opencars/wanted/pkg/model"
+	"github.com/opencars/wanted/pkg/domain/model"
 )
 
 // Transport is a wrapper for slice of WantedVehicle.

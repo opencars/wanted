@@ -1,5 +1,5 @@
 .PHONY: default all clean
-APPS     := server worker pull
+APPS     := http-server grpc-server worker pull
 BLDDIR   := bin
 
 .EXPORT_ALL_VARIABLES:
