@@ -1,7 +1,10 @@
 package teststore
 
 import (
+	"context"
+
 	"github.com/opencars/wanted/pkg/domain/model"
+	"github.com/opencars/wanted/pkg/domain/query"
 )
 
 type VehicleRepository struct {
@@ -56,5 +59,9 @@ func (r *VehicleRepository) FindByRevisionID(id string) ([]model.Vehicle, error)
 }
 
 func (r *VehicleRepository) AllWithLimit(limit uint64) ([]model.Vehicle, error) {
+	return nil, nil
+}
+
+func (r *VehicleRepository) Find(context.Context, *query.Find) (*query.FindResult, error) {
 	return nil, nil
 }

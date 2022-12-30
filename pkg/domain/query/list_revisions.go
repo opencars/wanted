@@ -3,10 +3,10 @@ package query
 import (
 	"strconv"
 
-	"github.com/go-ozzo/ozzo-validation/is"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
-	"github.com/opencars/core/pkg/domain/model"
+	"github.com/go-ozzo/ozzo-validation/v4/is"
 	"github.com/opencars/seedwork"
+	"github.com/opencars/wanted/pkg/domain/model"
 )
 
 type ListRevisions struct {
