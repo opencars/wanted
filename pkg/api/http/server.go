@@ -35,12 +35,12 @@ func (s *server) configureRouter() {
 		httputil.CustomerTokenMiddleware(),
 	)
 
-	router.Handle("/api/v1/wanted/revisions", s.Revision().All())
-	router.Handle("/api/v1/wanted/revisions/{id}", s.Revision().FindByID())
+	router.Handle("/wanted/revisions", s.Revision().All()).Methods("GET")
+	router.Handle("/wanted/revisions/{id}", s.Revision().FindByID()).Methods("GET")
 
-	router.Handle("/api/v1/wanted/vehicles", s.Vehicle().FindByNumber()).Queries("number", "{number}")
-	router.Handle("/api/v1/wanted/vehicles", s.Vehicle().FindByVIN()).Queries("vin", "{vin}")
-	router.Handle("/api/v1/wanted/vehicles", s.Vehicle().List())
+	router.Handle("/wanted/vehicles", s.Vehicle().FindByNumber()).Queries("number", "{number}").Methods("GET")
+	router.Handle("/wanted/vehicles", s.Vehicle().FindByVIN()).Queries("vin", "{vin}").Methods("GET")
+	router.Handle("/wanted/vehicles", s.Vehicle().List()).Methods("GET")
 }
 
 func (s *server) Revision() *RevisionAPI {
