@@ -2,6 +2,7 @@ package http
 
 import (
 	"github.com/gorilla/mux"
+	"github.com/opencars/seedwork/httputil"
 	"github.com/opencars/wanted/pkg/domain"
 )
 
@@ -29,14 +30,17 @@ func newServer(svc domain.CustomerService) *server {
 }
 
 func (s *server) configureRouter() {
-	core := s.router.Methods("GET", "OPTIONS").Subrouter()
+	router := s.router.PathPrefix("/api/v1/").Subrouter()
+	router.Use(
+		httputil.CustomerTokenMiddleware(),
+	)
 
-	core.Handle("/api/v1/wanted/revisions", s.Revision().All())
-	core.Handle("/api/v1/wanted/revisions/{id}", s.Revision().FindByID())
+	router.Handle("/api/v1/wanted/revisions", s.Revision().All())
+	router.Handle("/api/v1/wanted/revisions/{id}", s.Revision().FindByID())
 
-	core.Handle("/api/v1/wanted/vehicles", s.Vehicle().FindByNumber()).Queries("number", "{number}")
-	core.Handle("/api/v1/wanted/vehicles", s.Vehicle().FindByVIN()).Queries("vin", "{vin}")
-	core.Handle("/api/v1/wanted/vehicles", s.Vehicle().List())
+	router.Handle("/api/v1/wanted/vehicles", s.Vehicle().FindByNumber()).Queries("number", "{number}")
+	router.Handle("/api/v1/wanted/vehicles", s.Vehicle().FindByVIN()).Queries("vin", "{vin}")
+	router.Handle("/api/v1/wanted/vehicles", s.Vehicle().List())
 }
 
 func (s *server) Revision() *RevisionAPI {
