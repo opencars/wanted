@@ -7,7 +7,7 @@ import (
 
 	"github.com/opencars/wanted/pkg/cleansing"
 	"github.com/opencars/wanted/pkg/config"
-	"github.com/opencars/wanted/pkg/store"
+	"github.com/opencars/wanted/pkg/domain"
 )
 
 type Store struct {
@@ -17,7 +17,7 @@ type Store struct {
 	vehicleRepository  *VehicleRepository
 }
 
-func (s *Store) Revision() store.RevisionRepository {
+func (s *Store) Revision() domain.RevisionRepository {
 	if s.revisionRepository != nil {
 		return s.revisionRepository
 	}
@@ -29,7 +29,7 @@ func (s *Store) Revision() store.RevisionRepository {
 	return s.revisionRepository
 }
 
-func (s *Store) Vehicle() store.VehicleRepository {
+func (s *Store) Vehicle() domain.VehicleRepository {
 	if s.vehicleRepository != nil {
 		return s.vehicleRepository
 	}

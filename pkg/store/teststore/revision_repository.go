@@ -4,8 +4,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/opencars/wanted/pkg/model"
-	"github.com/opencars/wanted/pkg/store"
+	"github.com/opencars/wanted/pkg/domain/model"
 )
 
 type RevisionRepository struct {
@@ -22,7 +21,7 @@ func (r *RevisionRepository) Create(revision *model.Revision) error {
 func (r *RevisionRepository) FindByID(id string) (*model.Revision, error) {
 	revision, ok := r.revisions[id]
 	if !ok {
-		return nil, store.ErrRecordNotFound
+		return nil, model.ErrNotFound
 	}
 
 	return revision, nil

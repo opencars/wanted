@@ -1,4 +1,4 @@
-package apiserver
+package http
 
 import (
 	"context"
@@ -7,13 +7,13 @@ import (
 	"time"
 
 	"github.com/gorilla/handlers"
-
-	"github.com/opencars/wanted/pkg/store"
+	"github.com/opencars/wanted/pkg/domain"
 )
 
 // Start starts the server with specified store.
-func Start(ctx context.Context, addr string, store store.Store) error {
-	s := newServer(store)
+func Start(ctx context.Context, addr string, svc domain.CustomerService) error {
+	s := newServer(svc)
+
 	srv := http.Server{
 		Addr:    addr,
 		Handler: handlers.LoggingHandler(os.Stdout, handlers.ProxyHeaders(s.router)),

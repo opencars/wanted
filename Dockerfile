@@ -12,7 +12,8 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o /go/bin/server ./cmd/server/main.go && \
+RUN go build -o /go/bin/http-server ./cmd/http-server/main.go && \
+    go build -o /go/bin/grpc-server ./cmd/grpc-server/main.go && \
     go build -o /go/bin/worker ./cmd/worker/main.go
 
 FROM alpine
@@ -23,8 +24,5 @@ WORKDIR /app
 
 COPY --from=build /go/bin/ ./
 COPY ./config ./config
-COPY ./docs ./docs
 
 EXPOSE 8080
-
-CMD ["./server"]

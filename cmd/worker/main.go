@@ -9,7 +9,7 @@ import (
 	"github.com/opencars/seedwork/logger"
 	"github.com/opencars/wanted/pkg/bom"
 	"github.com/opencars/wanted/pkg/config"
-	"github.com/opencars/wanted/pkg/model"
+	"github.com/opencars/wanted/pkg/domain/model"
 	"github.com/opencars/wanted/pkg/store/postgres"
 	"github.com/opencars/wanted/pkg/worker"
 )

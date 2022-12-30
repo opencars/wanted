@@ -1,8 +1,10 @@
 package teststore
 
 import (
-	"github.com/opencars/wanted/pkg/model"
-	"github.com/opencars/wanted/pkg/store"
+	"context"
+
+	"github.com/opencars/wanted/pkg/domain/model"
+	"github.com/opencars/wanted/pkg/domain/query"
 )
 
 type VehicleRepository struct {
@@ -25,7 +27,7 @@ func (r *VehicleRepository) Create(revision *model.Revision, added []model.Vehic
 
 	for _, id := range removed {
 		if _, ok := r.vehicles[id]; !ok {
-			return store.ErrRecordNotFound
+			return model.ErrNotFound
 		}
 
 		r.vehicles[id].Status = model.StatusRemoved
@@ -57,5 +59,9 @@ func (r *VehicleRepository) FindByRevisionID(id string) ([]model.Vehicle, error)
 }
 
 func (r *VehicleRepository) AllWithLimit(limit uint64) ([]model.Vehicle, error) {
+	return nil, nil
+}
+
+func (r *VehicleRepository) Find(context.Context, *query.Find) (*query.FindResult, error) {
 	return nil, nil
 }

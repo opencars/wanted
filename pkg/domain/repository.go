@@ -1,7 +1,10 @@
-package store
+package domain
 
 import (
-	"github.com/opencars/wanted/pkg/model"
+	"context"
+
+	"github.com/opencars/wanted/pkg/domain/model"
+	"github.com/opencars/wanted/pkg/domain/query"
 )
 
 type RevisionRepository interface {
@@ -16,9 +19,15 @@ type RevisionRepository interface {
 
 type VehicleRepository interface {
 	Create(revision *model.Revision, added []model.Vehicle, removed []string) error
+	Find(context.Context, *query.Find) (*query.FindResult, error)
 	FindByNumber(number string) ([]model.Vehicle, error)
 	FindByVIN(vin string) ([]model.Vehicle, error)
 	FindByRevisionID(id string) ([]model.Vehicle, error)
 	All() ([]model.Vehicle, error)
 	AllWithLimit(limit uint64) ([]model.Vehicle, error)
+}
+
+type Store interface {
+	Revision() RevisionRepository
+	Vehicle() VehicleRepository
 }

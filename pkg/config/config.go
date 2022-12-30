@@ -9,9 +9,25 @@ import (
 
 // Settings is decoded configuration file.
 type Settings struct {
+	Log       Log       `yaml:"log"`
+	Server    Server    `yaml:"server"`
 	DB        Database  `yaml:"database"`
 	Worker    Worker    `yaml:"worker"`
 	Cleansing Cleansing `yaml:"cleansing"`
+}
+
+// Log represents settings for application logger.
+type Log struct {
+	Level string `yaml:"level"`
+	Mode  string `yaml:"mode"`
+}
+
+// Server represents settings for creating http server.
+type Server struct {
+	ShutdownTimeout Duration `yaml:"shutdown_timeout"`
+	ReadTimeout     Duration `yaml:"read_timeout"`
+	WriteTimeout    Duration `yaml:"write_timeout"`
+	IdleTimeout     Duration `yaml:"idle_timeout"`
 }
 
 // Database contains configuration details for database.

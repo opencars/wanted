@@ -1,7 +1,7 @@
 package worker
 
 import (
-	"github.com/opencars/wanted/pkg/model"
+	"github.com/opencars/wanted/pkg/domain/model"
 )
 
 type Node struct {
