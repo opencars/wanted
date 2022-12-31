@@ -14,8 +14,8 @@ type wantedHandler struct {
 
 func (h *wantedHandler) Find(ctx context.Context, r *wanted.FindRequest) (*wanted.FindResponse, error) {
 	q := query.Find{
-		Numbers: r.Number,
-		VINs:    r.Vin,
+		Numbers: r.Numbers,
+		VINs:    r.Vins,
 	}
 
 	result, err := h.api.svc.Find(ctx, &q)

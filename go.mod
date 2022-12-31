@@ -11,7 +11,7 @@ require (
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/lib/pq v1.10.7
 	github.com/opencars/govdata v0.1.2
-	github.com/opencars/grpc v0.5.19
+	github.com/opencars/grpc v0.5.20
 	github.com/opencars/schema v0.0.13
 	github.com/opencars/seedwork v0.0.3
 	github.com/opencars/translit v0.1.2
