@@ -41,7 +41,7 @@ func (s *CustomerService) ListByNumber(ctx context.Context, q *query.ListByNumbe
 		return nil, err
 	}
 
-	return s.vehicle.FindByVIN(q.Number)
+	return s.vehicle.FindByNumber(q.Number)
 }
 
 func (s *CustomerService) ListByVIN(ctx context.Context, q *query.ListByVIN) ([]model.Vehicle, error) {

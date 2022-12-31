@@ -17,7 +17,7 @@ type Find struct {
 
 func (q *Find) Prepare() {
 	for i, number := range q.Numbers {
-		q.Numbers[i] = translit.ToLatin(strings.ToUpper(number))
+		q.Numbers[i] = translit.ToUA(strings.ToUpper(number))
 	}
 
 	for i, vin := range q.VINs {
