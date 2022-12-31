@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 
+	"github.com/lib/pq"
 	"github.com/opencars/wanted/pkg/domain/model"
 	"github.com/opencars/wanted/pkg/domain/query"
 )
@@ -215,7 +216,7 @@ func (r *VehicleRepository) Find(ctx context.Context, q *query.Find) (*query.Fin
 				status, theft_date, insert_date, revision_id
 		FROM vehicles
 		WHERE body_number IN $1 OR chassis_number IN $1 OR engine_number IN $1 OR number IN $2`,
-		q.VINs, q.Numbers,
+		pq.Array(q.VINs), pq.Array(q.Numbers),
 	)
 	if err != nil {
 		return nil, err
