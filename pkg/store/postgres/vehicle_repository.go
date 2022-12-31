@@ -215,8 +215,8 @@ func (r *VehicleRepository) Find(ctx context.Context, q *query.Find) (*query.Fin
 				body_number, chassis_number, engine_number,
 				status, theft_date, insert_date, revision_id
 		FROM vehicles
-		WHERE body_number IN $1 OR chassis_number IN $1 OR engine_number IN $1 OR number IN $2`,
-		pq.Array(q.VINs), pq.Array(q.Numbers),
+		WHERE body_number IN ($1) OR chassis_number IN ($1) OR engine_number IN ($1) OR number IN ($2)`,
+		pq.StringArray(q.VINs), pq.StringArray(q.Numbers),
 	)
 	if err != nil {
 		return nil, err
