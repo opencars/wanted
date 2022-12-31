@@ -13,7 +13,7 @@ require (
 	github.com/opencars/govdata v0.1.2
 	github.com/opencars/grpc v0.5.19
 	github.com/opencars/schema v0.0.13
-	github.com/opencars/seedwork v0.0.2
+	github.com/opencars/seedwork v0.0.3
 	github.com/opencars/translit v0.1.2
 	github.com/stretchr/testify v1.8.0
 	google.golang.org/genproto v0.0.0-20221227171554-f9683d7f8bef
