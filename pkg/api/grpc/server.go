@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/opencars/grpc/pkg/wanted"
+	"github.com/opencars/seedwork/logger"
 	"github.com/opencars/wanted/pkg/domain/query"
 )
 
@@ -23,10 +24,14 @@ func (h *wantedHandler) Find(ctx context.Context, r *wanted.FindRequest) (*wante
 		return nil, handleErr(err)
 	}
 
+	logger.Debugf("vehicles: %+v", result)
+
 	dtos := make([]*wanted.Vehicle, 0)
 	for _, v := range result.Vehicles {
 		dtos = append(dtos, fromDomain(&v))
 	}
+
+	logger.Debugf("dtos: %+v", dtos)
 
 	return &wanted.FindResponse{
 		Vehicles: dtos,

@@ -5,6 +5,7 @@ import (
 	"database/sql"
 
 	"github.com/lib/pq"
+	"github.com/opencars/seedwork/logger"
 	"github.com/opencars/wanted/pkg/domain/model"
 	"github.com/opencars/wanted/pkg/domain/query"
 )
@@ -226,6 +227,8 @@ func (r *VehicleRepository) Find(ctx context.Context, q *query.Find) (*query.Fin
 	for i := range vehicles {
 		vehicles[i].InsertDate = vehicles[i].InsertDate.UTC()
 	}
+
+	logger.Debugf("sql: vehicles: %+v", vehicles)
 
 	return &query.FindResult{
 		Vehicles: vehicles,
