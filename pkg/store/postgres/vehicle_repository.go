@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/lib/pq"
+	"github.com/jmoiron/sqlx"
 	"github.com/opencars/seedwork/logger"
 	"github.com/opencars/wanted/pkg/domain/model"
 	"github.com/opencars/wanted/pkg/domain/query"
@@ -211,16 +211,18 @@ func (r *VehicleRepository) Create(revision *model.Revision, added []model.Vehic
 func (r *VehicleRepository) Find(ctx context.Context, q *query.Find) (*query.FindResult, error) {
 	vehicles := make([]model.Vehicle, 0)
 
-	err := r.store.db.Select(&vehicles,
-		`SELECT id, ovd, brand, maker, model, kind, color, number,
-				body_number, chassis_number, engine_number,
-				status, theft_date, insert_date, revision_id
+	s := `SELECT id, ovd, brand, maker, model, kind, color, number,
+		body_number, chassis_number, engine_number,
+		status, theft_date, insert_date, revision_id
 		FROM vehicles
-		WHERE body_number IN ($1) OR chassis_number IN ($1) OR engine_number IN ($1) OR number IN ($2)`,
-		pq.StringArray(q.VINs),
-		pq.StringArray(q.Numbers),
-	)
+		WHERE body_number IN (?) OR chassis_number IN (?) OR engine_number IN (?) OR number IN (?)`
+
+	qq, vs, err := sqlx.In(s, q.VINs, q.VINs, q.VINs, q.Numbers)
 	if err != nil {
+		return nil, err
+	}
+
+	if err := r.store.db.Select(&vehicles, qq, vs...); err != nil {
 		return nil, err
 	}
 
