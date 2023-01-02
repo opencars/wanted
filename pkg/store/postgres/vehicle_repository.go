@@ -222,10 +222,10 @@ func (r *VehicleRepository) Find(ctx context.Context, q *query.Find) (*query.Fin
 				body_number, chassis_number, engine_number,
 				status, theft_date, insert_date, revision_id
 		FROM vehicles
-		WHERE body_number IN ($1) OR
-		      chassis_number IN ($1) OR
-			  engine_number IN ($1) OR
-			  number IN ($2)`,
+		WHERE body_number IN ANY($1) OR
+		      chassis_number IN ANY($1) OR
+			  engine_number IN ANY($1) OR
+			  number IN ANY($2)`,
 		vins,
 		numbers,
 	)
