@@ -211,14 +211,23 @@ func (r *VehicleRepository) Create(revision *model.Revision, added []model.Vehic
 func (r *VehicleRepository) Find(ctx context.Context, q *query.Find) (*query.FindResult, error) {
 	vehicles := make([]model.Vehicle, 0)
 
+	vins := pq.StringArray(q.VINs)
+	numbers := pq.StringArray(q.Numbers)
+
+	logger.Debugf("Find: VINs: %+v", vins)
+	logger.Debugf("Find: Numbers: %+v", numbers)
+
 	err := r.store.db.Select(&vehicles,
 		`SELECT id, ovd, brand, maker, model, kind, color, number,
 				body_number, chassis_number, engine_number,
 				status, theft_date, insert_date, revision_id
 		FROM vehicles
-		WHERE body_number IN $1 OR chassis_number IN $1 OR engine_number IN $1 OR number IN $2`,
-		pq.StringArray(q.VINs),
-		pq.StringArray(q.Numbers),
+		WHERE body_number IN ($1) OR
+		      chassis_number IN ($1) OR
+			  engine_number IN ($1) OR
+			  number IN ($2)`,
+		vins,
+		numbers,
 	)
 	if err != nil {
 		return nil, err
