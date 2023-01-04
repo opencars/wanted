@@ -29,7 +29,6 @@ func (q *Find) Validate() error {
 	return validation.ValidateStruct(q,
 		validation.Field(
 			&q.VINs,
-			validation.Required.Error(seedwork.Required),
 			validation.Each(
 				validation.Required.Error(seedwork.Required),
 				validation.Length(6, 18).Error(seedwork.Invalid),
@@ -37,7 +36,6 @@ func (q *Find) Validate() error {
 		),
 		validation.Field(
 			&q.Numbers,
-			validation.Required.Error(seedwork.Required),
 			validation.Each(
 				validation.Required.Error(seedwork.Required),
 				validation.Length(6, 18).Error(seedwork.Invalid),
