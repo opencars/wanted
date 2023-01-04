@@ -13,6 +13,7 @@ func fromDomain(dto *model.Vehicle) *wanted.Vehicle {
 
 	vehicle.Id = dto.CheckSum
 	vehicle.RevisionId = dto.RevisionID
+	vehicle.Ovd = dto.OVD
 
 	if dto.Brand != nil {
 		vehicle.Title = *dto.Brand

@@ -214,9 +214,6 @@ func (r *VehicleRepository) Find(ctx context.Context, q *query.Find) (*query.Fin
 	vins := pq.StringArray(q.VINs)
 	numbers := pq.StringArray(q.Numbers)
 
-	logger.Debugf("Find: VINs: %+v", vins)
-	logger.Debugf("Find: Numbers: %+v", numbers)
-
 	err := r.store.db.Select(&vehicles,
 		`SELECT id, ovd, brand, maker, model, kind, color, number,
 				body_number, chassis_number, engine_number,
