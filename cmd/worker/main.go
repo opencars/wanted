@@ -27,6 +27,8 @@ func main() {
 		logger.Fatalf("failed to read config: %s", err)
 	}
 
+	logger.NewLogger(logger.LogLevel(conf.Log.Level), conf.Log.Mode == "dev")
+
 	// Register postgres adapter.
 	db, err := postgres.New(conf)
 	if err != nil {
