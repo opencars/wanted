@@ -42,8 +42,8 @@ github.com/mattn/go-sqlite3 v1.14.6 h1:dNPt6NO46WmLVt2DLNpwczCmdV5boIZ6g/tlDrlRU
 github.com/mattn/go-sqlite3 v1.14.6/go.mod h1:NyWgC/yNuGj7Q9rpYnZvas74GogHl5/Z4A/KQRfk6bU=
 github.com/opencars/govdata v0.1.2 h1:oWq6X+ccIYy/pSWVvWdXBccy92mOXsMzts4ELa0Mud0=
 github.com/opencars/govdata v0.1.2/go.mod h1:8vkBy7AEN8Y30qOq3l94j12gGfMob1vGzj6jvsbdMLY=
-github.com/opencars/grpc v0.5.20 h1:FWBXsUfIJNFo36USrRkv0nXhnEQ1/jRfJsXFqUGlcmA=
-github.com/opencars/grpc v0.5.20/go.mod h1:qSMXZ6YWlyQkufn5k9wU9rkrQGu6yiGeG4uRhpgsduk=
+github.com/opencars/grpc v0.5.22 h1:FQRTGzjcotNpdMOH3QmCgn92619nKW63JH8QtOm5rUI=
+github.com/opencars/grpc v0.5.22/go.mod h1:qSMXZ6YWlyQkufn5k9wU9rkrQGu6yiGeG4uRhpgsduk=
 github.com/opencars/schema v0.0.13 h1:EO4hrhrPimG69MxerLZalHygm+yvQ/yQGXc5I58UEoM=
 github.com/opencars/schema v0.0.13/go.mod h1:Rks9JEZsn5gGp/i4JLgZ+RvH81oQaf/EAmdRZmTyFac=
 github.com/opencars/seedwork v0.0.3 h1:2EgAxgwDaR6zvL0mZkV7GkeoovrtoJG5qvrQIf4btgs=

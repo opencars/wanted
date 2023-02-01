@@ -1,6 +1,7 @@
 package model
 
 import (
+	"regexp"
 	"strings"
 	"time"
 	"unicode"
@@ -15,6 +16,8 @@ import (
 // Status represent status of the vehicle search.
 // Can be either "stolen" or "removed".
 type Status string
+
+var VinCodePattern = regexp.MustCompile("[A-HJ-NPR-Z0-9]{17}")
 
 const (
 	// StatusStolen means, that vehicle was added to the registry.
@@ -54,6 +57,34 @@ func (v *Vehicle) BeforeCreate(c *cleansing.Cleansing) {
 
 	v.Maker = &maker
 	v.Model = &model
+}
+
+func (v *Vehicle) GetVIN() string {
+	if v.BodyNumber != nil && VinCodePattern.MatchString(*v.BodyNumber) {
+		return *v.BodyNumber
+	}
+
+	if v.ChassisNumber != nil && VinCodePattern.MatchString(*v.ChassisNumber) {
+		return *v.ChassisNumber
+	}
+
+	if v.EngineNumber != nil && VinCodePattern.MatchString(*v.EngineNumber) {
+		return *v.EngineNumber
+	}
+
+	if v.BodyNumber != nil {
+		return *v.BodyNumber
+	}
+
+	if v.ChassisNumber != nil {
+		return *v.ChassisNumber
+	}
+
+	if v.EngineNumber != nil {
+		return *v.EngineNumber
+	}
+
+	return ""
 }
 
 func fixedColor(color *string) *string {
