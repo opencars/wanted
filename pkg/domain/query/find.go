@@ -38,7 +38,7 @@ func (q *Find) Validate() error {
 			&q.Numbers,
 			validation.Each(
 				validation.Required.Error(seedwork.Required),
-				validation.Length(6, 18).Error(seedwork.Invalid),
+				validation.Length(2, 18).Error(seedwork.Invalid),
 			),
 		),
 	)
