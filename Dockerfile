@@ -1,4 +1,4 @@
-FROM golang:1.19-alpine AS build
+FROM golang:1.23-alpine AS build
 
 WORKDIR /go/src/app
 
@@ -12,8 +12,7 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o /go/bin/http-server ./cmd/http-server/main.go && \
-    go build -o /go/bin/grpc-server ./cmd/grpc-server/main.go && \
+RUN go build -o /go/bin/server ./cmd/server/main.go && \
     go build -o /go/bin/worker ./cmd/worker/main.go
 
 FROM alpine
@@ -25,4 +24,6 @@ WORKDIR /app
 COPY --from=build /go/bin/ ./
 COPY ./config ./config
 
-EXPOSE 8080
+EXPOSE 8080 3000
+
+CMD ["./server"]

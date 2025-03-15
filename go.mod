@@ -1,6 +1,8 @@
 module github.com/opencars/wanted
 
-go 1.19
+go 1.23.0
+
+toolchain go1.23.2
 
 require (
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
@@ -16,6 +18,7 @@ require (
 	github.com/opencars/seedwork v0.0.3
 	github.com/opencars/translit v0.1.2
 	github.com/stretchr/testify v1.8.0
+	golang.org/x/sync v0.12.0
 	google.golang.org/genproto v0.0.0-20221227171554-f9683d7f8bef
 	google.golang.org/grpc v1.51.0
 	gopkg.in/yaml.v2 v2.4.0

@@ -31,7 +31,7 @@ func TestTransport_Sort(t *testing.T) {
 }
 
 func TestTransport_Search(t *testing.T) {
-	rand.Seed(time.Now().Unix())
+	rand.New(rand.NewSource(time.Now().Unix()))
 
 	arr := Transport(make([]model.Vehicle, 0, 10000))
 
@@ -51,7 +51,7 @@ func TestTransport_Search(t *testing.T) {
 }
 
 func BenchmarkTransport_Search(b *testing.B) {
-	rand.Seed(time.Now().Unix())
+	rand.New(rand.NewSource(time.Now().Unix()))
 
 	arr := Transport(make([]model.Vehicle, 0, b.N))
 
@@ -69,7 +69,7 @@ func BenchmarkTransport_Search(b *testing.B) {
 }
 
 func BenchmarkTransport_search(b *testing.B) {
-	rand.Seed(time.Now().Unix())
+	rand.New(rand.NewSource(time.Now().Unix()))
 
 	arr := Transport(make([]model.Vehicle, 0, b.N))
 
